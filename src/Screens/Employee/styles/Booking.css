@@ -1,0 +1,115 @@
+/* src/styles/MainContent.css */
+.app-main-content {
+    flex-grow: 1;
+    padding: 25px;
+    background-color: #ecf0f1; /* Màu nền chính */
+  }
+  
+  .main-title {
+    color: #27ae60; /* Màu xanh lá */
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 2em;
+  }
+  
+  .booking-list {
+    margin: 0;
+  }
+  
+  .booking-item {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 15px 20px;
+    margin-bottom: 15px;
+    display: grid; /* Sử dụng Grid để chia cột dễ hơn */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive */
+    gap: 15px; /* Khoảng cách giữa các cột */
+    align-items: start; /* Căn các mục lên trên */
+  }
+  
+  .booking-name {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #3498db; /* Màu tên */
+  }
+  
+   .booking-contact {
+      font-size: 0.9em;
+      color: #555;
+      margin: 3px 0;
+   }
+  
+  .booking-status strong {
+      color: #e74c3c; /* Màu trạng thái chờ */
+      /* Thêm màu khác cho các trạng thái khác nếu cần */
+  }
+  
+  .booking-details ul {
+      list-style: none;
+      padding: 0;
+      margin: 5px 0 0 0;
+      font-size: 0.9em;
+      color: #333;
+  }
+   .booking-details h4, .booking-notes h4{
+      margin-bottom: 5px;
+      font-size: 1em;
+      color: #555;
+   }
+   .booking-notes p {
+      font-size: 0.9em;
+      color: #333;
+      margin-top: 0;
+   }
+  
+  .booking-actions {
+      grid-column: -1 / -2; /* Đẩy actions sang cột cuối cùng */
+      justify-self: end; /* Căn nút về bên phải */
+      align-self: start;
+  }
+  
+  .action-btn {
+      background: none;
+      border: 1px solid #ccc;
+      padding: 5px 8px;
+      margin-left: 5px;
+      cursor: pointer;
+      border-radius: 4px;
+  }
+   .action-btn:hover {
+      background-color: #f0f0f0;
+   }
+   /* Nên dùng icon thật thay vì emoji */
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+  }
+  
+  .pagination button, .pagination span {
+    margin: 0 5px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .pagination button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  .pagination button.active {
+    background-color: #3498db; /* Màu nút active */
+    color: white;
+    border-color: #3498db;
+  }
+  
+  .pagination span {
+    border: none;
+    padding: 8px 0; /* Chỉ cần padding dọc */
+    cursor: default;
+    background: none;
+  }

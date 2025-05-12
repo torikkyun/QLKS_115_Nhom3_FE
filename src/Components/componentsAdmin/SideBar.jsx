@@ -57,7 +57,7 @@ const Sidebar = () => {
           key: '1-3',
           icon: <ToolOutlined />,
           label: 'Dịch vụ',
-          path: '/admin/room_management/services',
+          path: '/admin/service_management/',
         },
       ],
     },

@@ -7,7 +7,7 @@ import RoomManagement from "../Screens/Admin/RoomManagement";
 import EmployeeManegement from "../Screens/Admin/EmployeeManagement";
 import PromotionsPage from "../Screens/Admin/PromotionManagement";
 import AdminDashBoard from "../Screens/Admin/AdminDashBoard";// import ServiceManagement from "../Screens/Admin/ServiceManagement";
-
+import ServiceManagement from "../Screens/Admin/ServiceManagement";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -40,6 +40,10 @@ export const router = createBrowserRouter([
   {
     path: "/admin/dashboard",
     element: <AdminDashBoard />
+  },
+  {
+    path: "/admin/service_management",
+    element: <ServiceManagement />
   },
   // {
   //   path: "/admin/room_management/service",

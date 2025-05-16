@@ -3,9 +3,7 @@ import { Button, Spin, Pagination as AntdPagination } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import EmployeeRoomTable from '../../Components/componentsEmployee/EmployeeRoomTable';
 import RoomFilter from '../../Components/componentsAdmin/RoomFilter';
-import RoomForm from '../../Components/componentsAdmin/RoomForm';
-import DeleteConfirmModal from '../../Components/componentsAdmin/DeleteConfirmModal';
-import { getRooms, addRoom, updateRoom, deleteRoom } from '../../apis/apiroom';
+import { getRooms } from '../../apis/apiroom';
 import EmployeeSideBar from '../../Components/componentsEmployee/EmployeeSideBar';
 import EmployeeHeader from '../../Components/componentsEmployee/EmployeeHeader';
 
@@ -14,10 +12,7 @@ const EmployeeRoomList = () => {
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({ page: 1, pageSize: 10, totalPages: 1, totalRecords: 0 });
     const [filters, setFilters] = useState({ search: '', status: '', type: '' });
-    const [isFormVisible, setIsFormVisible] = useState(false);
-    const [editingRoom, setEditingRoom] = useState(null);
-    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-    const [roomToDelete, setRoomToDelete] = useState(null);
+
 
     const fetchRooms = async () => {
         setLoading(true);
@@ -59,60 +54,14 @@ const EmployeeRoomList = () => {
         setFilters(newFilters);
         setPagination({ ...pagination, page: 1 });
     };
-
-    const handleAddRoom = () => {
-        setEditingRoom(null);
-        setIsFormVisible(true);
-    };
-
-    const handleEditRoom = (room) => {
-        setEditingRoom(room);
-        setIsFormVisible(true);
-    };
-
-    const handleDeleteRoom = (maPhong) => {
-        setRoomToDelete(maPhong);
-        setIsDeleteModalVisible(true);
-    };
-
-    const handleConfirmDelete = async () => {
-        try {
-            await deleteRoom(roomToDelete);
-            toast.success('Xóa phòng thành công');
-            fetchRooms();
-        } catch (error) {
-            console.error('Lỗi khi xóa phòng:', error.message);
-            toast.error('Lỗi khi xóa phòng: ' + error.message);
-        } finally {
-            setIsDeleteModalVisible(false);
-            setRoomToDelete(null);
-        }
-    };
-
-    const handleSaveRoom = async (values) => {
-        try {
-            if (editingRoom) {
-                await updateRoom({ ...editingRoom, ...values });
-                toast.success('Cập nhật phòng thành công');
-            } else {
-                await addRoom(values);
-                toast.success('Thêm phòng thành công');
-            }
-            fetchRooms();
-            setIsFormVisible(false);
-        } catch (error) {
-            console.error('Lỗi khi lưu phòng:', error.message);
-            toast.error('Lỗi khi lưu phòng: ' + error.message);
-        }
-    };
-
+    
     const filteredRooms = rooms.filter((room) => {
         const searchText = filters.search.toLowerCase();
         const matchesSearch =
             (room.soPhong || '').toLowerCase().includes(searchText) ||
             (room.maPhong || '').toString().toLowerCase().includes(searchText);
-        const matchesStatus = filters.status === '' || (room.tinhTrangPhong !== undefined && room.tinhTrangPhong.toString() === filters.status);
-        const matchesType = filters.type === '' || (room.maLoaiPhong !== undefined && room.maLoaiPhong.toString() === filters.type);
+        const matchesStatus = filters.status === '' || (room.tenTinhTrang !== undefined && room.tenTinhTrang.toString() === filters.status);
+        const matchesType = filters.type === '' || (room.ghiChu !== undefined && room.ghiChu.toString() === filters.type);
         return matchesSearch && matchesStatus && matchesType;
     });
 
@@ -124,13 +73,7 @@ const EmployeeRoomList = () => {
 
                 <div className="flex-1 p-6 bg-gray-100 min-h-scree overflow-auto">
                     <h1 className="text-2xl font-bold mb-4">Danh Sách Phòng</h1>
-                    <Button
-                        type="primary"
-                        onClick={handleAddRoom}
-                        className="mb-4 bg-blue-500 hover:bg-blue-600 border-none"
-                    >
-                        Thêm Phòng
-                    </Button>
+
                     <RoomFilter onFilterChange={handleFilterChange} />
                     {loading ? (
                         <div className="flex justify-center my-10">
@@ -148,20 +91,10 @@ const EmployeeRoomList = () => {
                         pageSizeOptions={['10', '20', '50']}
                         className="mt-4 flex justify-end"
                     />
-                    <RoomForm
-                        visible={isFormVisible}
-                        onCancel={() => setIsFormVisible(false)}
-                        onSave={handleSaveRoom}
-                        room={editingRoom}
-                    />
-                    <DeleteConfirmModal
-                        visible={isDeleteModalVisible}
-                        onConfirm={handleConfirmDelete}
-                        onCancel={() => setIsDeleteModalVisible(false)}
-                    />
+
                     <ToastContainer />
                 </div>
-                
+
             </div>
         </div>
     );

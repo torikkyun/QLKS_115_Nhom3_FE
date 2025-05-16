@@ -80,7 +80,7 @@ const LoginScreen = () => {
         if (roleName === "Quản lý") {
           navigate('/admin/dashboard'); // Chuyển hướng cho Quản lý
         } else if (roleName === "Lễ tân" || roleName === "Phục vụ") {
-          navigate('/staff/home'); // Chuyển hướng cho Nhân viên
+          navigate('/employee/rooms'); // Chuyển hướng cho Nhân viên
         }
         
       } catch (error) {

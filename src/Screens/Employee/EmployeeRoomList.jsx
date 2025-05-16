@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Spin, Pagination as AntdPagination } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
-import RoomList from '../../Components/componentsAdmin/RoomList';
+import EmployeeRoomTable from '../../Components/componentsEmployee/EmployeeRoomTable';
 import RoomFilter from '../../Components/componentsAdmin/RoomFilter';
 import RoomForm from '../../Components/componentsAdmin/RoomForm';
 import DeleteConfirmModal from '../../Components/componentsAdmin/DeleteConfirmModal';
 import { getRooms, addRoom, updateRoom, deleteRoom } from '../../apis/apiroom';
-import SideBar from '../../Components/componentsAdmin/SideBar';
-import Header from '../../Common/Header';
+import EmployeeSideBar from '../../Components/componentsEmployee/EmployeeSideBar';
+import EmployeeHeader from '../../Components/componentsEmployee/EmployeeHeader';
 
-const RoomManagement = () => {
+const EmployeeRoomList = () => {
     const [rooms, setRooms] = useState([]);
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({ page: 1, pageSize: 10, totalPages: 1, totalRecords: 0 });
@@ -118,12 +118,12 @@ const RoomManagement = () => {
 
     return (
         <div className="flex h-screen ">
-            <SideBar />
+            <EmployeeSideBar />
             <div className="flex flex-col flex-1">
-                <Header />
+                <EmployeeHeader />
 
                 <div className="flex-1 p-6 bg-gray-100 min-h-scree overflow-auto">
-                    <h1 className="text-2xl font-bold mb-4">Quản Lý Phòng</h1>
+                    <h1 className="text-2xl font-bold mb-4">Danh Sách Phòng</h1>
                     <Button
                         type="primary"
                         onClick={handleAddRoom}
@@ -137,7 +137,7 @@ const RoomManagement = () => {
                             <Spin size="large" />
                         </div>
                     ) : (
-                        <RoomList rooms={filteredRooms} onEdit={handleEditRoom} onDelete={handleDeleteRoom} />
+                        <EmployeeRoomTable rooms={filteredRooms} />
                     )}
                     <AntdPagination
                         current={pagination.page}
@@ -167,4 +167,4 @@ const RoomManagement = () => {
     );
 };
 
-export default RoomManagement;
+export default EmployeeRoomList;

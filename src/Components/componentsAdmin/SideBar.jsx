@@ -71,7 +71,7 @@ const Sidebar = () => {
       key: '3',
       icon: <ScheduleOutlined />,
       label: 'Danh sách đặt phòng',
-      path: '/bookings',
+      path: '/admin/bookinglist',
     },
     {
       key: '4',

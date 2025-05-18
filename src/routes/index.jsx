@@ -8,6 +8,8 @@ import EmployeeManegement from "../Screens/Admin/EmployeeManagement";
 import PromotionsPage from "../Screens/Admin/PromotionManagement";
 import AdminDashBoard from "../Screens/Admin/AdminDashBoard";// import ServiceManagement from "../Screens/Admin/ServiceManagement";
 import ServiceManagement from "../Screens/Admin/ServiceManagement";
+import UserBookings from "../Screens/Customers/UserBooking";
+import BookingList from "../Screens/Admin/BookingList";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -44,6 +46,14 @@ export const router = createBrowserRouter([
   {
     path: "/admin/service_management",
     element: <ServiceManagement />
+  },
+  {
+    path: "customers/userBooking",
+    element: <UserBookings />
+  },
+  {
+    path: "admin/bookinglist",
+    element: <BookingList />
   },
   // {
   //   path: "/admin/room_management/service",

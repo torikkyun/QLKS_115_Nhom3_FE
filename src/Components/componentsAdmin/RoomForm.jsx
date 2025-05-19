@@ -10,7 +10,13 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
     form
       .validateFields()
       .then((values) => {
-        onSave(values);
+        console.log('Form values:', values); // Debug giá trị form
+        // Chuyển đổi giá trị tenTinhTrang nếu cần (giả sử API cần chuỗi)
+        const transformedValues = {
+          ...values,
+          tenTinhTrang: values.tenTinhTrang === 'Trống' ? 0 : 1,
+        };
+        onSave(transformedValues); // Gửi giá trị đã chuyển đổi
         form.resetFields();
       })
       .catch((info) => {
@@ -60,18 +66,19 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
         <Form.Item
           name="giaPhong"
           label="Giá Phòng"
+          
           rules={[{ required: true, message: 'Vui lòng nhập giá phòng' }]}
         >
           <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item
-          name="tinhTrangPhong"
+          name="tenTinhTrang"
           label="Trạng Thái"
           rules={[{ required: true, message: 'Vui lòng chọn trạng thái' }]}
         >
           <Select className="w-full">
-            <Option value={0}>Trống</Option>
-            <Option value={1}>Đã sử dụng</Option>
+            <Option value={0}>Đang sử dụng</Option>
+            <Option value={1}>Trống</Option>
           </Select>
         </Form.Item>
       </Form>

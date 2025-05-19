@@ -111,7 +111,7 @@ const RoomManagement = () => {
         const matchesSearch =
             (room.soPhong || '').toLowerCase().includes(searchText) ||
             (room.maPhong || '').toString().toLowerCase().includes(searchText);
-        const matchesStatus = filters.status === '' || (room.tinhTrangPhong !== undefined && room.tinhTrangPhong.toString() === filters.status);
+        const matchesStatus = filters.status === '' || (room.tenTinhTrang !== undefined && room.tenTinhTrang.toString() === filters.status);
         const matchesType = filters.type === '' || (room.maLoaiPhong !== undefined && room.maLoaiPhong.toString() === filters.type);
         return matchesSearch && matchesStatus && matchesType;
     });

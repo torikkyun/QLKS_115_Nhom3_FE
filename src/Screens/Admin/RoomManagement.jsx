@@ -35,6 +35,7 @@ const RoomManagement = () => {
             }
 
             const fetchedRooms = Array.isArray(response.data) ? response.data : response || [];
+            console.log('Fetched Rooms:', fetchedRooms);
             setRooms(fetchedRooms);
             setPagination({
                 page: response.page || 1,
@@ -66,7 +67,11 @@ const RoomManagement = () => {
     };
 
     const handleEditRoom = (room) => {
-        setEditingRoom(room);
+        const transformedRoom = {
+            ...room,
+            tenTinhTrang: room.tenTinhTrang === 'Trống' ? 1 : 0,
+        };
+        setEditingRoom(transformedRoom);
         setIsFormVisible(true);
     };
 
@@ -95,14 +100,15 @@ const RoomManagement = () => {
                 await updateRoom({ ...editingRoom, ...values });
                 toast.success('Cập nhật phòng thành công');
             } else {
+                console.log('Adding room with values:', values);
                 await addRoom(values);
                 toast.success('Thêm phòng thành công');
             }
             fetchRooms();
             setIsFormVisible(false);
         } catch (error) {
-            console.error('Lỗi khi lưu phòng:', error.message);
-            toast.error('Lỗi khi lưu phòng: ' + error.message);
+            console.error('Lỗi khi lưu phòng:', error);
+            toast.error('Lỗi khi lưu phòng: ' + (error.response?.data?.message || error.message));
         }
     };
 
@@ -117,12 +123,11 @@ const RoomManagement = () => {
     });
 
     return (
-        <div className="flex h-screen ">
+        <div className="flex h-screen">
             <SideBar />
             <div className="flex flex-col flex-1">
                 <Header />
-
-                <div className="flex-1 p-6 bg-gray-100 min-h-scree overflow-auto">
+                <div className="flex-1 p-6 bg-gray-100 overflow-y-auto">
                     <h1 className="text-2xl font-bold mb-4">Quản Lý Phòng</h1>
                     <Button
                         type="primary"

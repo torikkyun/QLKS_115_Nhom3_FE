@@ -10,13 +10,15 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
     form
       .validateFields()
       .then((values) => {
-        console.log('Form values:', values); // Debug giá trị form
-        // Chuyển đổi giá trị tenTinhTrang nếu cần (giả sử API cần chuỗi)
+        console.log('Form values:', values);
+        // Chuyển đổi tenTinhTrang thành tinhTrangPhong (số) để gửi cho API
         const transformedValues = {
           ...values,
-          tenTinhTrang: values.tenTinhTrang === 'Trống' ? 0 : 1,
+          tinhTrangPhong: values.tenTinhTrang, // Gửi tinhTrangPhong (0 hoặc 1)
         };
-        onSave(transformedValues); // Gửi giá trị đã chuyển đổi
+        delete transformedValues.tenTinhTrang; // Xóa tenTinhTrang khỏi dữ liệu gửi đi
+        console.log('Transformed values for API:', transformedValues);
+        onSave(transformedValues);
         form.resetFields();
       })
       .catch((info) => {
@@ -66,7 +68,6 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
         <Form.Item
           name="giaPhong"
           label="Giá Phòng"
-          
           rules={[{ required: true, message: 'Vui lòng nhập giá phòng' }]}
         >
           <InputNumber min={0} className="w-full" />

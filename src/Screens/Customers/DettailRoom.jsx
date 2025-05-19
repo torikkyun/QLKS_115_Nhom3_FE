@@ -61,8 +61,8 @@ const RoomDetail = () => {
         { id: 6, tenLoai: "Dịch vụ khác", giaDichVu: 50000 },
       ];
       const processedServices = servicesData.map(service => ({
-        maDichVu: service.id,
-        tenDichVu: service.tenLoai || 'Không xác định',
+        maDichVu: service.maDichVu,
+        tenDichVu: service.tenDichVu,
         gia: service.giaDichVu || 0,
       }));
       console.log('Processed services:', processedServices);

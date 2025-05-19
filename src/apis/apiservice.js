@@ -1,6 +1,6 @@
 export async function getServices(page = 1, pageSize = 10) {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/LoaiDichVu?page=${page}&pageSize=${pageSize}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/DichVu?page=${page}&pageSize=${pageSize}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,

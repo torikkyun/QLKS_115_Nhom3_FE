@@ -90,7 +90,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`bg-blue-900 text-white h-screen transition-all duration-300 ${
+      className={`bg-blue-900 text-white min-h-screen transition-all duration-300 ${
         collapsed ? 'w-16' : 'w-64'
       }`}
     >

@@ -10,11 +10,12 @@ import AdminDashBoard from "../Screens/Admin/AdminDashBoard";
  import ServiceManagement from "../Screens/Admin/ServiceManagement";
  import BillManagement from "../Screens/Admin/BillManagement";
  import DetailRoom from "../Screens/Customers/DettailRoom";
+import CartPage from "../Screens/Customers/CartPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <LoginScreen />,
+    element: <Dashboard />,
   },
   {
     path: "/login",
@@ -56,7 +57,11 @@ export const router = createBrowserRouter([
   {
     path: "/user/detailroom/:maPhong",
     element: <DetailRoom />, // DetailRoom.jsx
-  }
+  },
+  {
+    path: "/user/CartPage",
+    element: <CartPage/>, 
+  },
   
   
 

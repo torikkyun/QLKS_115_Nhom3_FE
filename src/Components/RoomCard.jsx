@@ -2,24 +2,22 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
 
-// Import ảnh cho từng loại giá (đảm bảo các file ảnh tồn tại trong thư mục assets)
-import lowPriceImage from '../assets/Image/GiaThap.jpeg'; // Thay bằng đường dẫn thực tế
-import mediumPriceImage from '../assets/Image/GiaTrungBinh.png'; // Thay bằng đường dẫn thực tế
-import highPriceImage from '../assets/Image/GiaCao.jpg'; // Thay bằng đường dẫn thực tế
+import lowPriceImage from '../assets/Image/GiaThap.jpeg'; 
+import mediumPriceImage from '../assets/Image/GiaTrungBinh.png'; 
+import highPriceImage from '../assets/Image/GiaCao.jpg'; 
 
 const RoomCard = ({ room, onBookRoom, index }) => {
     if (!room) return <div className="text-center text-gray-500">Không tìm thấy thông tin phòng.</div>;
 
     const navigate = useNavigate();
 
-    // Kiểm tra trạng thái phòng và debug giá trị
     const isBooked = room.tenTinhTrang === "Đang sử dụng" ;
     console.log(`Room ${room.soPhong} - tenTinhTrang: ${room.tenTinhTrang}, isBooked: ${isBooked}`); // Debug
 
     const handleViewDetail = (maPhong) => {
         if (isBooked) {
             console.log(`Phòng ${maPhong} đã được đặt, không thể xem chi tiết.`);
-            return; // Chặn hoàn toàn nếu phòng đã được đặt
+            return; 
         }
         console.log(`Xem chi tiết phòng ${maPhong}`);
         if (onBookRoom) {
@@ -32,24 +30,22 @@ const RoomCard = ({ room, onBookRoom, index }) => {
         e.target.src = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPjzZo5vrIhhAYMg10uFFk9aoDJ2Z3he7a5g&s';
     };
 
-    // Hàm ánh xạ giá với ảnh
     const getPriceImage = (price) => {
         if (price <= 500000) {
-            return lowPriceImage; // Giá thấp
+            return lowPriceImage; 
         } else if (price >= 700000 && price < 1000000) {
-            return mediumPriceImage; // Giá trung bình
+            return mediumPriceImage; 
         } else {
-            return highPriceImage; // Giá cao
+            return highPriceImage; 
         }
     };
 
-    // Lấy ảnh dựa trên giá, nếu không có giaPhong thì dùng ảnh mặc định
     const roomImage = room.giaPhong ? getPriceImage(room.giaPhong) : room.anh || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPjzZo5vrIhhAYMg10uFFk9aoDJ2Z3he7a5g&s';
 
     return (
         <div
             className={`pb-15 ${isBooked ? 'opacity-50 cursor-not-allowed' : ''}`}
-            onClick={isBooked ? null : () => handleViewDetail(room.maPhong)} // Vô hiệu hóa onClick nếu đã được đặt
+            onClick={isBooked ? null : () => handleViewDetail(room.maPhong)} 
         >
             <div className={`relative w-full max-w-sm sm:max-w-xs md:max-w-sm group ${isBooked ? '' : 'cursor-pointer'} animate__animated animate__fadeInUp animate__delay-${(index % 4) + 1}s`}>
                 <div className="bg-white border border-gray-200 shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -61,7 +57,7 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                             loading="lazy"
                             onError={handleImageError}
                         />
-                        {/* Thêm badge hiển thị trạng thái */}
+
                         <span
                             className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-semibold ${
                                 room.tenTinhTrang === "Trống"
@@ -95,10 +91,10 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                                 : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
                         }`}
                         onClick={(e) => {
-                            e.stopPropagation(); // Ngăn sự kiện click từ div cha
-                            handleViewDetail(room.maPhong); // Gọi handleViewDetail (đã có kiểm tra isBooked)
+                            e.stopPropagation(); 
+                            handleViewDetail(room.maPhong); 
                         }}
-                        disabled={isBooked} // Vô hiệu hóa nút nếu đã được đặt
+                        disabled={isBooked} 
                     >
                         {isBooked ? 'Đã được đặt' : 'Xem chi tiết'}
                     </Button>

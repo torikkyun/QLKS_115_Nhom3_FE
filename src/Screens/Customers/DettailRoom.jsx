@@ -183,7 +183,7 @@ const RoomDetail = () => {
   return (
     <div className="bg-gray-50 min-h-screen pb-12">
       <Header />
-      <div className="max-w-6xl mx-auto px-4 pt-10">
+      <div className="max-w-6xl mx-auto px-4 pt-14">
         <div className="flex justify-between items-start mb-4 pt-12">
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Phòng {room.soPhong}</h1>
@@ -196,6 +196,7 @@ const RoomDetail = () => {
               <div className="bg-blue-100 text-blue-800 rounded-r px-3 py-1 font-medium">
                 Tuyệt vời
               </div>
+              
             </div>
           </div>
         </div>

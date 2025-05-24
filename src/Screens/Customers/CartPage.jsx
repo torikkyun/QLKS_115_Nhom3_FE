@@ -94,7 +94,7 @@ const CartPage = () => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 min-h-screen">
+    <div className="bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 min-h-screen mt-20">
       <Header />
       <div className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 pt-20 pb-16">
         <div className="absolute inset-0 bg-black opacity-20"></div>

@@ -3,8 +3,46 @@ import React, { useState, useEffect } from 'react';
 import bannerImage1 from '../assets/Image/Hotel.jpg';
 import bannerImage2 from '../assets/Image/hotel2.jpg';
 import bannerImage3 from '../assets/Image/hotel3.jpg';
+import banner5 from '../assets/Image/banner5.jpg';
+import banner6 from '../assets/Image/banner6.jpg';
+import banner7 from '../assets/Image/banner7.jpg';
+import banner8 from '../assets/Image/banner8.jpg';
+import banner9 from '../assets/Image/banner9.jpg';
+
 
 const banners = [
+  {
+    image: banner7,  
+    title: 'Khách sạn 8 Bross luôn chào đón bạn',
+    description: 'Khám phá dịch vụ và tiện nghi hàng đầu của chúng tôi.',
+    subtitle: 'Luxury & Comfort'
+  },
+  {
+    image: banner9,
+    title: 'Đến 8Bross để trải nghiệm sự khác biệt',
+    description: 'Khám phá dịch vụ và tiện nghi hàng đầu của chúng tôi.',
+    subtitle: 'Luxury & Comfort'
+  },
+  
+  {
+    image: banner8,
+    title: 'Những đêm nghỉ chân đầy trải nghiệm',
+    description: 'Tận hưởng những chuyến du lịch tuyệt với.',
+    subtitle: 'Trải nghiệm tuyệt vời'
+  },
+  
+  {
+    image: banner5,
+    title: 'Khách sạn 8Bross - Nơi trải nghiệm tuyệt vời bắt đầu',
+    description: 'Khám phá dịch vụ và tiện nghi hàng đầu của chúng tôi.',
+    subtitle: 'Trải nghiệm tuyệt vời'
+  },
+  {
+    image: banner6,
+    title: 'Khám phá sự sang trọng',
+    description: 'Nghỉ dưỡng đẳng cấp với dịch vụ 5 sao.',
+    subtitle: 'Trải nghiệm tuyệt vời'
+  },
   {
     image: bannerImage1,
     title: 'Chào mừng đến với Khách Sạn 8Bross',
@@ -23,6 +61,9 @@ const banners = [
     description: 'Hòa mình vào không gian yên bình và tiện nghi.',
     subtitle: 'Perfect Relaxation'
   },
+  
+  
+  
 ];
 
 const Banner = () => {
@@ -39,14 +80,12 @@ const Banner = () => {
   }, [currentIndex]);
 
   // Handle slide transition with animation
-  const handleSlideChange = (newIndex) => {
-    if (newIndex === currentIndex) return;
-    
+  const handleSlideChange = () => {
     setIsTransitioning(true);
     setTimeout(() => {
-      setCurrentIndex(newIndex);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % banners.length);
       setIsTransitioning(false);
-    }, 150);
+    }, 700); // Thời gian trễ để hoàn thành hiệu ứng chuyển đổi
   };
 
   // Xử lý chuyển đổi thủ công
@@ -63,7 +102,7 @@ const Banner = () => {
   const { image, title, description, subtitle } = banners[currentIndex];
 
   return (
-    <div className="relative w-full h-[500px] overflow-hidden rounded-lg shadow-2xl">
+    <div className="relative w-full h-[666px] overflow-hidden rounded-lg shadow-2xl mt-20">
       {/* Background Image with Parallax Effect */}
       <div
         className={`absolute inset-0 bg-cover bg-center transform transition-all duration-700 ease-in-out ${
@@ -102,7 +141,8 @@ const Banner = () => {
           
           {/* CTA Button */}
           <div className="mt-8">
-            <button className="group px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-full font-semibold text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-white/20">
+            <button onClick={() =>handleSlideChange((currentIndex + 1) % banners.length)}
+            className="group px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-full font-semibold text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-white/20">
               <span className="flex items-center gap-2">
                 Khám phá ngay
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,14 +200,19 @@ const Banner = () => {
         <div 
           className="h-full bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-75 ease-linear"
           style={{ 
-            width: `${((currentIndex + 1) / banners.length) * 100}%`,
+            width: `${((currentIndex + 1) / banners.length) * 10}%`,
             animation: 'progress 5s linear infinite'
           }}
         />
       </div>
 
-      {/* Decorative Elements */}
-      <div className="absolute top-8 right-8 w-20 h-20 border-2 border-white/20 rounded-full animate-pulse" />
+
+      <div className="absolute top-8 right-8 w-20 h-20 border-2 border-white/20 rounded-full animate-pulse transform rotate-45  " />
+      <div className="absolute top-12 right-12 w-10 h-10 border-2 border-white/30 rounded-full animate-bounce" />
+      <div className="absolute top-14 right-14 w-12 h-12 border-2 border-white/20 rounded-full animate-pulse" />
+      <div className="absolute top-10 right-10 w-6 h-6 border-2 border-white/30 rounded-full animate-bounce" />
+      <div className="absolute top-20 right-20 w-4 h-4 border-2 border-white/30 rounded-full animate-pulse" />
+      
       <div className="absolute top-16 right-16 w-8 h-8 border-2 border-white/30 rounded-full animate-bounce" style={{ animationDelay: '1s' }} />
       
       <style jsx>{`

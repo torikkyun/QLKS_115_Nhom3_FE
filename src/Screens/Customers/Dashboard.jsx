@@ -129,16 +129,9 @@
       <div className="bg-gray-50 min-h-screen flex flex-col">
         <Header className="transition-all duration-300 ease-in-out shadow-md" />
         <main className="flex-1">
-          <Banner className="animate__animated animate__zoomIn" />
-          <div className="max-w-7xl mx-auto px-4 pt-10 pb-20">
-            <div className="relative z-10 -mt-24 mb-12">
-              <SearchBox
-                fields={searchFields}
-                onSearch={handleSearch}
-                buttonText="Search Rooms"
-                className="animate__animated animate__fadeInUp shadow-lg rounded-lg bg-white p-4"
-              />
-            </div>
+          <Banner className="animate__animated animate__zoomIn " />
+          <div className="max-w-7xl mx-auto px-4 pt-10 pb-20 animate__animated animate__fadeIn">
+            
             <h1 className="text-3xl font-bold mb-8 text-center text-gray-800 animate__animated animate__fadeInDown">
               Danh sách Phòng
             </h1>
@@ -212,84 +205,9 @@
           </div>
         </main>
         <Footer className="transition-all duration-300 ease-in-out shadow-md" />
-        {showModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 animate__animated animate__fadeIn animate__faster">
-            <Modal onClose={handleCloseModal}>
-              <div className="bg-white rounded-lg shadow-xl p-6 w-[500px] transform transition-all duration-300 ease-in-out scale-95 animate__animated animate__zoomIn animate__faster">
-                <h2 className="text-2xl font-semibold mb-4 text-gray-800">Xác nhận đặt phòng</h2>
-                {selectedRoom ? (
-                  <>
-                    <div className="space-y-3">
-                      <p className="mb-2">
-                        <strong className="text-gray-600">Trạng thái:</strong>{" "}
-                        <span
-                          className={
-                            selectedRoom.tenTinhTrang === "Trống"
-                              ? "text-green-600"
-                              : "text-red-600"
-                          }
-                        >
-                          {selectedRoom.tenTinhTrang || "Không xác định"}
-                        </span>
-                      </p>
-                      <p className="mb-2">
-                        <strong className="text-gray-600">Phòng:</strong>{" "}
-                        {selectedRoom.soPhong || "Không xác định"}
-                      </p>
-                      <p className="mb-2">
-                        <strong className="text-gray-600">Loại phòng:</strong>{" "}
-                        {selectedRoom.ghiChu || "Không xác định"}
-                      </p>
-                      <p className="mb-2">
-                        <strong className="text-gray-600">Giá phòng:</strong>{" "}
-                        {selectedRoom.giaPhong
-                          ? `${selectedRoom.giaPhong.toLocaleString()} VND`
-                          : "Không xác định"}
-                      </p>
-                      <p className="mb-4">
-                        <strong className="text-gray-600">Số giường:</strong>{" "}
-                        {selectedRoom.soGiuong || "Không xác định"}
-                      </p>
-                    </div>
-                    <div className="flex gap-4 mt-6">
-                      <button
-                        onClick={handleCloseModal}
-                        className="relative px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-all duration-200 ease-in-out overflow-hidden group"
-                      >
-                        <span className="absolute inset-0 bg-gray-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300 ease-in-out rounded-lg"></span>
-                        Hủy
-                      </button>
-                      <button
-                        onClick={() => {
-                          if (selectedRoom && selectedRoom.tenTinhTrang === "Trống") {
-                            console.log(`Đặt phòng ${selectedRoom.soPhong}`);
-                            message.success("Đặt phòng thành công!");
-                          } else {
-                            message.error("Phòng hiện không khả dụng để đặt!");
-                          }
-                          handleCloseModal();
-                        }}
-                        disabled={selectedRoom?.tenTinhTrang !== "Trống"}
-                        className={`relative px-4 py-2 rounded-lg ${
-                          selectedRoom?.tenTinhTrang !== "Trống"
-                            ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                            : "bg-blue-600 text-white hover:bg-blue-700"
-                        } transition-all duration-200 ease-in-out overflow-hidden group`}
-                      >
-                        <span className="absolute inset-0 bg-blue-800 opacity-0 group-hover:opacity-20 transition-opacity duration-300 ease-in-out rounded-lg"></span>
-                        Xác nhận
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <p className="mb-4 text-red-500">Không tìm thấy thông tin phòng.</p>
-                )}
-              </div>
-            </Modal>
-          </div>
-        )}
+        
       </div>
     );
   };
-
+  
   export default Home;

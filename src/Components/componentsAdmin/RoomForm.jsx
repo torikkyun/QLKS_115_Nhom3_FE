@@ -10,7 +10,15 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
     form
       .validateFields()
       .then((values) => {
-        onSave(values);
+        console.log('Form values:', values);
+        // Chuyển đổi tenTinhTrang thành tinhTrangPhong (số) để gửi cho API
+        const transformedValues = {
+          ...values,
+          tinhTrangPhong: values.tenTinhTrang, // Gửi tinhTrangPhong (0 hoặc 1)
+        };
+        delete transformedValues.tenTinhTrang; // Xóa tenTinhTrang khỏi dữ liệu gửi đi
+        console.log('Transformed values for API:', transformedValues);
+        onSave(transformedValues);
         form.resetFields();
       })
       .catch((info) => {
@@ -65,13 +73,13 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
           <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item
-          name="tinhTrangPhong"
+          name="tenTinhTrang"
           label="Trạng Thái"
           rules={[{ required: true, message: 'Vui lòng chọn trạng thái' }]}
         >
           <Select className="w-full">
-            <Option value={0}>Trống</Option>
-            <Option value={1}>Đã sử dụng</Option>
+            <Option value={0}>Đang sử dụng</Option>
+            <Option value={1}>Trống</Option>
           </Select>
         </Form.Item>
       </Form>

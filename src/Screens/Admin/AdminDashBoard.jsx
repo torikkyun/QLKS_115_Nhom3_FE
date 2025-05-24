@@ -18,7 +18,7 @@ const revenueData = [
 const roomUsageData = [
   { name: 'Phòng trống', value: 15 },
   { name: 'Phòng đã đặt', value: 30 },
-  { name: 'Phòng đang dọn', value: 5 },
+
 ];
 
 const COLORS = ['#1890ff', '#52c41a', '#fa8c16'];

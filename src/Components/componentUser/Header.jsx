@@ -57,7 +57,7 @@ const Header = () => {
       label: t('booking_history'),
       onClick: () => navigate('/user/booking-history'),
     },
-    
+
     {
       type: 'divider',
     },
@@ -155,10 +155,13 @@ const Header = () => {
               onClick={() => navigate('/user/home')}
             />
             <div className="">
-              <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <h1
+                onClick={() => navigate('/user/home')}
+                className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform">
                 {t('hotel_name')}
               </h1>
-              <p className="text-xs text-gray-400">{t('slogan')}</p>
+              <p className="text-xs text-gray-400 cursor-pointer hover:scale-105 transition-transform"
+                onClick={() => navigate('/user/home')}>{t('slogan')}</p>
             </div>
           </div>
 
@@ -185,7 +188,7 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center gap-2">
-            
+
 
             <Dropdown menu={{ items: languageItems }} placement="bottomRight" className="hidden md:block">
               <Button type="link" className="flex items-center gap-2 text-white hover:text-blue-500">

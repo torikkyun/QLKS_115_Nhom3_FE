@@ -101,19 +101,23 @@ const PromotionsPage = () => {
             let result;
             if (isEditing) {
                 result = await updatePromotion(currentPromo.maKhuyenMai, promoData);
-                if (result) {
-                    setPromotions(promotions.map(p => (p.maKhuyenMai === currentPromo.maKhuyenMai ? result : p)));
+                if (result && result.maKhuyenMai) {
+                    setPromotions(
+                        promotions.map((p) =>
+                            p.maKhuyenMai === currentPromo.maKhuyenMai ? { ...p, ...result } : p
+                        )
+                    );
                     message.success('Cập nhật khuyến mãi thành công!');
                 } else {
-                    message.error('Cập nhật khuyến mãi thất bại!');
+                    throw new Error('Cập nhật thất bại, dữ liệu không hợp lệ!');
                 }
             } else {
                 result = await createPromotion(promoData);
-                if (result) {
+                if (result && result.maKhuyenMai) {
                     setPromotions([...promotions, result]);
                     message.success('Tạo khuyến mãi thành công!');
                 } else {
-                    message.error('Tạo khuyến mãi thất bại!');
+                    throw new Error('Tạo thất bại, dữ liệu không hợp lệ!');
                 }
             }
             setModalVisible(false);

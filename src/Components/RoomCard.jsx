@@ -1,28 +1,37 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faMoneyBillWave, 
+  faStar, 
+  faCrown, 
+  faBed, 
+  faDollarSign, 
+  faLock, 
+  faEye, 
+  faArrowRight 
+} from '@fortawesome/free-solid-svg-icons';
 
-import lowPriceImage from '../assets/Image/GiaThap.jpeg'; 
-import mediumPriceImage from '../assets/Image/GiaTrungBinh.png'; 
-import highPriceImage from '../assets/Image/GiaCao.jpg'; 
+import lowPriceImage from '../assets/Image/GiaThap.jpeg';
+import mediumPriceImage from '../assets/Image/GiaTrungBinh.png';
+import highPriceImage from '../assets/Image/GiaCao.jpg';
 
 const RoomCard = ({ room, onBookRoom, index }) => {
     if (!room) return <div className="text-center text-gray-500">Không tìm thấy thông tin phòng.</div>;
 
     const navigate = useNavigate();
 
-    const isBooked = room.tenTinhTrang === "Đang sử dụng" ;
-    console.log(`Room ${room.soPhong} - tenTinhTrang: ${room.tenTinhTrang}, isBooked: ${isBooked}`); // Debug
+    const isBooked = room.tenTinhTrang === "Đang sử dụng";
+    console.log(`Room ${room.soPhong} - tenTinhTrang: ${room.tenTinhTrang}, isBooked: ${isBooked}`);
 
     const handleViewDetail = (maPhong) => {
         if (isBooked) {
             console.log(`Phòng ${maPhong} đã được đặt, không thể xem chi tiết.`);
-            return; 
+            return;
         }
         console.log(`Xem chi tiết phòng ${maPhong}`);
-        if (onBookRoom) {
-            onBookRoom(maPhong);
-        }
+        if (onBookRoom) onBookRoom(maPhong);
         navigate(`/user/detailroom/${maPhong}`);
     };
 
@@ -31,74 +40,146 @@ const RoomCard = ({ room, onBookRoom, index }) => {
     };
 
     const getPriceImage = (price) => {
-        if (price <= 500000) {
-            return lowPriceImage; 
-        } else if (price >= 700000 && price < 1000000) {
-            return mediumPriceImage; 
-        } else {
-            return highPriceImage; 
-        }
+        if (price <= 500000) return lowPriceImage;
+        else if (price >= 700000 && price < 1000000) return mediumPriceImage;
+        else return highPriceImage;
+    };
+
+    const getPriceCategory = (price) => {
+        if (price <= 500000) return { text: 'Tiết kiệm', color: 'bg-emerald-500', icon: faMoneyBillWave };
+        else if (price >= 700000 && price < 1000000) return { text: 'Trung bình', color: 'bg-blue-500', icon: faStar };
+        else return { text: 'Cao cấp', color: 'bg-purple-500', icon: faCrown };
     };
 
     const roomImage = room.giaPhong ? getPriceImage(room.giaPhong) : room.anh || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPjzZo5vrIhhAYMg10uFFk9aoDJ2Z3he7a5g&s';
+    const priceCategory = getPriceCategory(room.giaPhong);
 
     return (
-        <div
-            className={`pb-15 ${isBooked ? 'opacity-50 cursor-not-allowed' : ''}`}
-            onClick={isBooked ? null : () => handleViewDetail(room.maPhong)} 
-        >
-            <div className={`relative w-full max-w-sm sm:max-w-xs md:max-w-sm group ${isBooked ? '' : 'cursor-pointer'} animate__animated animate__fadeInUp animate__delay-${(index % 4) + 1}s`}>
-                <div className="bg-white border border-gray-200 shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                    <div className="relative">
+        <div className="pb-5">
+            <div
+                className={`relative w-full max-w-sm mx-auto group transition-all duration-500 ${
+                    isBooked
+                        ? 'opacity-60 cursor-not-allowed scale-95'
+                        : 'cursor-pointer hover:scale-105 hover:-translate-y-2'
+                } animate__animated animate__fadeInUp animate${(index % 4) + 1}s`}
+                onClick={isBooked ? null : () => handleViewDetail(room.maPhong)}
+            >
+                {/* Main Card */}
+                <div className={`relative bg-white rounded-2xl shadow-xl overflow-hidden border-0 transition-all duration-300 ${
+                    isBooked
+                        ? 'bg-gray-50'
+                        : 'hover:shadow-2xl hover:shadow-blue-500/25 group-hover:border-blue-500/50'
+                }`}>
+                    <div className="relative h-48 overflow-hidden">
                         <img
-                            className="w-full h-40 object-cover"
+                            className={`w-full h-full object-cover transition-all duration-500 ${
+                                isBooked ? 'grayscale' : 'group-hover:scale-110'
+                            }`}
                             src={roomImage}
                             alt={`Phòng ${room.soPhong}`}
                             loading="lazy"
                             onError={handleImageError}
                         />
 
-                        <span
-                            className={`absolute top-2 right-2 px-2 py-1 rounded-full text-xs font-semibold ${
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+                        <div className="absolute top-3 right-3">
+                            <span className={`px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-sm border ${
                                 room.tenTinhTrang === "Trống"
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-red-100 text-red-800"
-                            }`}
-                        >
-                            {room.tenTinhTrang || "Không xác định"}
-                        </span>
+                                    ? 'bg-green-500/90 text-white border-green-400/50 shadow-lg shadow-green-500/25'
+                                    : 'bg-red-500/90 text-white border-red-400/50 shadow-lg shadow-red-500/25'
+                            }`}>
+                                {room.tenTinhTrang === "Trống" ? "✓ Có sẵn" : "✗ Đã đặt"}
+                            </span>
+                        </div>
+
+                        <div className="absolute top-3 left-3">
+                            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold text-white backdrop-blur-sm border border-white/20 shadow-lg ${priceCategory.color}`}>
+                                <FontAwesomeIcon icon={priceCategory.icon} className="mr-1" />
+                                {priceCategory.text}
+                            </span>
+                        </div>
+                        <div className="absolute bottom-3 left-3">
+                            <h3 className="text-2xl font-bold text-white drop-shadow-lg">
+                                #{room.soPhong}
+                            </h3>
+                        </div>
                     </div>
-                    <div className="p-3 sm:p-4">
-                        <h3 className="text-lg font-semibold text-gray-800 mb-1 sm:text-xl">
-                            Phòng {room.soPhong}
-                        </h3>
-                        <p className="text-xs text-gray-500 mb-2 sm:text-sm">
-                            {room.ghiChu || 'Loại phòng không xác định'}
-                        </p>
-                        <p className="text-sm text-gray-600 mb-3 sm:text-base">
-                            Số giường: {room.soGiuong}
-                        </p>
-                        <p className="text-sm text-gray-600 mb-3 sm:text-base">
-                            Giá phòng: {room.giaPhong?.toLocaleString() || 'Liên hệ'} VND
-                        </p>
+
+                    <div className="p-3 space-y-4">
+                        {/* Room Type */}
+                        <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <p className="text-sm text-gray-600 font-medium">
+                                {room.ghiChu || 'Phòng tiêu chuẩn'}
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="flex items-center space-x-2 p-2.5 bg-gray-50 rounded-lg">
+                                <FontAwesomeIcon icon={faBed} className="text-lg" />
+                                <div>
+                                    <p className="text-xs text-gray-500">Giường</p>
+                                    <p className="font-semibold text-gray-800 text-lg">{room.soGiuong}</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center space-x-2 p-2.5 bg-gray-50 rounded-lg">
+                                <FontAwesomeIcon icon={faDollarSign} className="text-lg" />
+                                <div>
+                                    <p className="text-xs text-gray-500">Giá/đêm</p>
+                                    <p className="font-semibold text-blue-600">
+                                        {room.giaPhong?.toLocaleString() || 'Liên hệ'}₫
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div className={`transition-all duration-300 ${isBooked ? 'opacity-50' : 'opacity-100'}`}>
+                            <Button
+                                className={`w-full font-bold py-3 px-4 rounded-xl text-sm transition-all duration-300 ${
+                                    isBooked
+                                        ? 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                                        : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 hover:shadow-lg hover:shadow-blue-500/25 transform hover:scale-[1.02] active:scale-[0.98]'
+                                }`}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleViewDetail(room.maPhong);
+                                }}
+                                disabled={isBooked}
+                            >
+                                {isBooked ? (
+                                    <span className="flex items-center justify-center space-x-2">
+                                        <FontAwesomeIcon icon={faLock} />
+                                        <span>Không khả dụng</span>
+                                    </span>
+                                ) : (
+                                    <span className="flex items-center justify-center space-x-2">
+                                        <FontAwesomeIcon icon={faEye} />
+                                        <span>Xem chi tiết</span>
+                                        <FontAwesomeIcon icon={faArrowRight} />
+                                    </span>
+                                )}
+                            </Button>
+                        </div>
                     </div>
+                    {!isBooked && (
+                        <>
+                            <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                                <div className="absolute inset-0 rounded-2xl border-2 border-blue-500/30 animate-pulse"></div>
+                            </div>
+                            
+
+                            <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+                            </div>
+                        </>
+                    )}
                 </div>
-                <div className={`absolute bottom-0 left-0 right-0 transform translate-y-0 ${isBooked ? '' : 'group-hover:translate-y-8'} transition-all duration-300 ${isBooked ? 'opacity-0' : 'opacity-0 group-hover:opacity-100'} pt-2`}>
-                    <Button
-                        className={`w-full font-semibold py-2 px-4 text-sm sm:text-base ${
-                            isBooked
-                                ? 'bg-gray-400 text-gray-700 cursor-not-allowed'
-                                : 'bg-blue-600 text-white hover:bg-blue-700 cursor-pointer'
-                        }`}
-                        onClick={(e) => {
-                            e.stopPropagation(); 
-                            handleViewDetail(room.maPhong); 
-                        }}
-                        disabled={isBooked} 
-                    >
-                        {isBooked ? 'Đã được đặt' : 'Xem chi tiết'}
-                    </Button>
-                </div>
+
+                {!isBooked && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 animate-ping"></div>
+                )}
             </div>
         </div>
     );

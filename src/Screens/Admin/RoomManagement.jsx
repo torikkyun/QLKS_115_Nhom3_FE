@@ -161,7 +161,7 @@ const RoomManagement = () => {
                     />
                     <DeleteConfirmModal
                         visible={isDeleteModalVisible}
-                        onConfirm={handleConfirmDelete}
+                        onConfirm={handleConfirmDelete} 
                         onCancel={() => setIsDeleteModalVisible(false)}
                     />
                     <ToastContainer />

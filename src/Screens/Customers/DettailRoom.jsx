@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Spin, Form, Checkbox, Divider, DatePicker, message, Badge } from 'antd';
+import { Button, Spin, Form, Checkbox, Divider, DatePicker, message, Badge, Select } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoom, bookRoom } from '../../apis/apiroom';
 import { getServices } from '../../apis/apiservice';
+import { fetchPromotions } from '../../apis/apipromotion'; // Import the promotion API
 import Header from '../../Components/componentUser/Header';
 import { InfoCircleOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import Lightbox from 'yet-another-react-lightbox';
@@ -13,6 +14,7 @@ import { addBooking } from '../../redux/CartSlice';
 import BookingModal from '../../Components/componentUser/BookingModal';
 
 const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 const RoomDetail = () => {
   const { maPhong } = useParams();
@@ -33,6 +35,8 @@ const RoomDetail = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [promotions, setPromotions] = useState([]);
+  const [selectedPromotion, setSelectedPromotion] = useState(null);
   const [form] = Form.useForm();
 
   const images = [
@@ -48,6 +52,7 @@ const RoomDetail = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
+      // Fetch room data
       const roomResponse = await getRoom(maPhong);
       let roomData = roomResponse && Object.keys(roomResponse).length > 0 ? roomResponse : {
         maPhong: maPhong,
@@ -61,6 +66,7 @@ const RoomDetail = () => {
       roomData.giaPhong = roomData.giaPhong || 1500000;
       setRoom(roomData);
 
+      // Fetch hotel data
       const hotelData = roomResponse.hotel || {
         ten: "The Luxury Hotel",
         diaChi: "123 Nguyễn Huệ, Quận 1, TP.HCM",
@@ -68,6 +74,7 @@ const RoomDetail = () => {
       };
       setHotel(hotelData);
 
+      // Fetch services
       const servicesResponse = await getServices(1, 100);
       const servicesData = servicesResponse.data || [
         { id: 1, tenLoai: "Dịch vụ phòng", giaDichVu: 100000 },
@@ -79,6 +86,10 @@ const RoomDetail = () => {
         gia: service.giaDichVu || 0,
       }));
       setServices(processedServices);
+
+      // Fetch promotions
+      const promotionsResponse = await fetchPromotions(1, 100);
+      setPromotions(promotionsResponse || []);
     } catch (error) {
       console.error('Lỗi khi lấy dữ liệu:', error.message);
       message.error('Lỗi khi tải dữ liệu: ' + error.message);
@@ -92,9 +103,11 @@ const RoomDetail = () => {
       setDates(dates);
       const nights = dates[1].diff(dates[0], 'day');
       setNumberOfNights(nights > 0 ? nights : 1);
+      setSelectedPromotion(null); // Reset selected promotion when dates change
     } else {
       setDates([null, null]);
       setNumberOfNights(1);
+      setSelectedPromotion(null);
     }
   };
 
@@ -108,6 +121,53 @@ const RoomDetail = () => {
     }
   };
 
+  const handlePromotionChange = (maKhuyenMai) => {
+    const promo = promotions.find(p => p.maKhuyenMai === maKhuyenMai) || null;
+    setSelectedPromotion(promo);
+  };
+
+  const isPromotionApplicable = (promo) => {
+    if (!dates[0] || !dates[1]) return false;
+    const checkInDate = dayjs(dates[0]);
+    const checkOutDate = dayjs(dates[1]);
+    const startDate = dayjs(promo.ngayBatDau);
+    const endDate = dayjs(promo.ngayKetThuc);
+
+    // Check if check-in date is within promotion period
+    if (checkInDate.isBefore(startDate) || checkInDate.isAfter(endDate)) return false;
+
+    // Additional conditions based on promotion type
+    if (promo.maKhuyenMai === 3) { // Early booking (30 days in advance)
+      return checkInDate.diff(dayjs(), 'day') >= 30;
+    }
+    if (promo.maKhuyenMai === 4) { // Long-term booking (7+ nights)
+      return numberOfNights >= 7;
+    }
+    if (promo.maKhuyenMai === 2) { // Weekend promotion
+      const checkInDay = checkInDate.day();
+      return checkInDay === 5 || checkInDay === 6 || checkInDay === 0; // Friday, Saturday, Sunday
+    }
+    return true;
+  };
+
+  const calculateBookingTotal = () => {
+    const serviceTotal = services
+      .filter(service => selectedServices.includes(service.maDichVu))
+      .reduce((total, item) => total + (item?.gia || 0), 0);
+    let roomTotal = (room?.giaPhong || 0) * numberOfNights;
+
+    // Apply promotion discount
+    if (selectedPromotion && isPromotionApplicable(selectedPromotion)) {
+      if (selectedPromotion.tenKieuKhuyenMai === 'Phần trăm') {
+        roomTotal *= (1 - selectedPromotion.giaTriKhuyenMai / 100);
+      } else if (selectedPromotion.tenKieuKhuyenMai === 'Giảm giá trực tiếp') {
+        roomTotal -= selectedPromotion.giaTriKhuyenMai;
+      }
+    }
+
+    return Math.max(0, roomTotal + serviceTotal); // Ensure total is not negative
+  };
+
   const handleAddBooking = () => {
     if (!dates[0] || !dates[1]) {
       message.error('Vui lòng chọn ngày nhận và ngày trả phòng');
@@ -119,6 +179,7 @@ const RoomDetail = () => {
       dates: [dates[0], dates[1]],
       numberOfNights,
       services: services.filter(service => selectedServices.includes(service.maDichVu)),
+      promotion: selectedPromotion, // Include selected promotion
     };
     dispatch(addBooking(newBooking));
     message.success('Đã thêm đặt phòng vào giỏ hàng');
@@ -126,6 +187,7 @@ const RoomDetail = () => {
     setDates([null, null]);
     setNumberOfNights(1);
     setSelectedServices([]);
+    setSelectedPromotion(null);
   };
 
   const handleBookRoom = async (values) => {
@@ -143,6 +205,7 @@ const RoomDetail = () => {
         cccd: values.cccd,
         ghiChu: values.ghiChu,
         dichVu: selectedBooking.services.map(item => item.maDichVu),
+        maKhuyenMai: selectedBooking.promotion?.maKhuyenMai || null, // Include promotion ID
         ngayDat: new Date().toISOString(),
         ngayNhan: selectedBooking.dates[0].toISOString(),
         ngayTra: selectedBooking.dates[1].toISOString(),
@@ -153,19 +216,13 @@ const RoomDetail = () => {
       form.resetFields();
       setCustomerInfo({ ho: '', ten: '', email: '', sdt: '', cccd: '' });
       setSelectedBooking(null);
+      setSelectedPromotion(null);
     } catch (error) {
       console.error('Lỗi khi đặt phòng:', error.message);
       message.error('Lỗi khi đặt phòng: ' + error.message);
     } finally {
       setLoading(false);
     }
-  };
-
-  const calculateBookingTotal = () => {
-    const serviceTotal = services
-      .filter(service => selectedServices.includes(service.maDichVu))
-      .reduce((total, item) => total + (item?.gia || 0), 0);
-    return serviceTotal + (room?.giaPhong || 0) * numberOfNights;
   };
 
   if (loading) {
@@ -196,7 +253,6 @@ const RoomDetail = () => {
               <div className="bg-blue-100 text-blue-800 rounded-r px-3 py-1 font-medium">
                 Tuyệt vời
               </div>
-              
             </div>
           </div>
         </div>
@@ -309,6 +365,25 @@ const RoomDetail = () => {
                   className="w-full"
                 />
               </div>
+              <div className="mb-4">
+                <label className="text-gray-600">Khuyến mãi</label>
+                <Select
+                  value={selectedPromotion?.maKhuyenMai || null}
+                  onChange={handlePromotionChange}
+                  placeholder="Chọn khuyến mãi"
+                  className="w-full"
+                  disabled={!dates[0] || !dates[1]}
+                >
+                  <Option value={null}>Không áp dụng khuyến mãi</Option>
+                  {promotions
+                    .filter(isPromotionApplicable)
+                    .map(promo => (
+                      <Option key={promo.maKhuyenMai} value={promo.maKhuyenMai}>
+                        {promo.tenKhuyenMai} ({promo.moTaKhuyenMai})
+                      </Option>
+                    ))}
+                </Select>
+              </div>
               <div className="flex justify-between items-center mb-3 pb-3 border-b">
                 <span className="text-gray-600">Giá phòng / đêm</span>
                 <span className="font-semibold">{(room.giaPhong || 0).toLocaleString()} VND</span>
@@ -326,6 +401,16 @@ const RoomDetail = () => {
                       <span className="font-semibold">{(item.gia || 0).toLocaleString()} VND</span>
                     </div>
                   ))}
+              {selectedPromotion && isPromotionApplicable(selectedPromotion) && (
+                <div className="flex justify-between items-center mb-3 pb-3 border-b">
+                  <span className="text-gray-600">Khuyến mãi ({selectedPromotion.tenKhuyenMai})</span>
+                  <span className="font-semibold text-green-600">
+                    -{selectedPromotion.tenKieuKhuyenMai === 'Phần trăm'
+                      ? `${selectedPromotion.giaTriKhuyenMai}%`
+                      : selectedPromotion.giaTriKhuyenMai.toLocaleString() + ' VND'}
+                  </span>
+                </div>
+              )}
               <div className="flex justify-between items-center mb-6 pt-2 text-lg">
                 <span className="font-medium">Tổng cộng</span>
                 <span className="font-bold text-blue-600">{calculateBookingTotal().toLocaleString()} VND</span>
@@ -356,6 +441,7 @@ const RoomDetail = () => {
                     dates: [dates[0], dates[1]],
                     numberOfNights,
                     services: services.filter(service => selectedServices.includes(service.maDichVu)),
+                    promotion: selectedPromotion,
                   };
                   setSelectedBooking(newBooking);
                   setIsBookingModalVisible(true);

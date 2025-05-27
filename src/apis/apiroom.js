@@ -131,12 +131,15 @@ export async function deleteRoom(maPhong) {
 
 export async function bookRoom(bookingData) {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/DatPhong`, {
+        const headers = {
+            'Content-Type': 'application/json',
+        };
+        const token = localStorage.getItem('token');
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/DatTraPhong/dat-phong`, {
             method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json',
-            },
+            headers,
             body: JSON.stringify(bookingData),
         });
 
@@ -146,7 +149,7 @@ export async function bookRoom(bookingData) {
         }
 
         const contentType = response.headers.get('content-type');
-        if (response.status === 201 || !contentType || !contentType.includes('application/json')) {
+        if (response.status === 201 || response.status === 204 || !contentType || !contentType.includes('application/json')) {
             return bookingData;
         }
 

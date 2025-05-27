@@ -46,33 +46,7 @@ const Home = () => {
     setSelectedRoomId(roomId);
     setShowModal(true);
   };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedRoomId(null);
-  };
-
-  const searchFields = [
-    {
-      name: "roomName",
-      label: "Room Name",
-      type: "text",
-      placeholder: "Enter room name...",
-      className: "transition-all duration-300 ease-in-out focus:ring-2 focus:ring-blue-400",
-    },
-    {
-      name: "roomType",
-      label: "Room Type",
-      type: "select",
-      options: [
-        { value: "", label: "All" },
-        { value: "Phòng đơn", label: "Phòng đơn" },
-        { value: "Phòng đôi", label: "Phòng đôi" },
-        { value: "Phòng gia đình", label: "Phòng gia đình" },
-      ],
-      className: "transition-all duration-300 ease-in-out focus:ring-2 focus:ring-blue-400",
-    },
-  ];
+ 
 
   const selectedRoom = filteredRooms.find((r) => r.maPhong === selectedRoomId);
 
@@ -134,7 +108,7 @@ const Home = () => {
         <Header className="transition-all duration-300 ease-in-out shadow-md" />
         <main className="flex-1">
           <Banner className="animate__animated animate__zoomIn " />
-          <div className="max-w-8xl mx-auto px-4 pt-10  ml-10 mr-10 animate__animated animate__fadeIn ">
+          <div className="max-w-8xl mx-auto px-4 pr-10 pl-10 pt-10  ml-10 mr-10 animate__animated animate__fadeIn ">
 
             <h1 className="text-3xl font-bold mb-8 text-center text-gray-800 animate__animated animate__fadeInDown">
               Danh sách Phòng

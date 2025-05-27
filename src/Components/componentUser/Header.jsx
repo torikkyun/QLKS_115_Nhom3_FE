@@ -101,7 +101,7 @@ const Header = () => {
   const navItems = [
     { path: '/user/home', label: t('home') },
     { path: '/user/rooms', label: t('rooms') },
-    { path: '/user/about', label: t('about') },
+    { path: '/user/aboutus', label: t('about') },
   ];
 
   const handleSearch = (value) => {

@@ -22,7 +22,7 @@ const EmployeeRoomFilter = ({ onFilterChange }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
       <Input
-        placeholder="Tìm theo số phòng hoặc mã phòng"
+        placeholder="Tìm theo số phòng."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="w-full"

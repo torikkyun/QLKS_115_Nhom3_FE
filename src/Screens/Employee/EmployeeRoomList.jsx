@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Spin, Pagination as AntdPagination } from 'antd';
 import { ToastContainer, toast } from 'react-toastify';
 import EmployeeRoomTable from '../../Components/componentsEmployee/EmployeeRoomTable';
-import RoomFilter from '../../Components/componentsAdmin/RoomFilter';
+import EmployeeRoomFilter from '../../Components/componentsEmployee/EmployeeRoomFilter';
 import { getRooms } from '../../apis/apiroom';
 import EmployeeSideBar from '../../Components/componentsEmployee/EmployeeSideBar';
 import EmployeeHeader from '../../Components/componentsEmployee/EmployeeHeader';
@@ -58,8 +58,7 @@ const EmployeeRoomList = () => {
     const filteredRooms = rooms.filter((room) => {
         const searchText = filters.search.toLowerCase();
         const matchesSearch =
-            (room.soPhong || '').toLowerCase().includes(searchText) ||
-            (room.maPhong || '').toString().toLowerCase().includes(searchText);
+            (room.soPhong || '').toLowerCase().includes(searchText)
         const matchesStatus = filters.status === '' || (room.tenTinhTrang !== undefined && room.tenTinhTrang.toString() === filters.status);
         const matchesType = filters.type === '' || (room.ghiChu !== undefined && room.ghiChu.toString() === filters.type);
         return matchesSearch && matchesStatus && matchesType;
@@ -74,7 +73,7 @@ const EmployeeRoomList = () => {
                 <div className="flex-1 p-6 bg-gray-100 min-h-scree overflow-auto">
                     <h1 className="text-2xl font-bold mb-4">Danh Sách Phòng</h1>
 
-                    <RoomFilter onFilterChange={handleFilterChange} />
+                    <EmployeeRoomFilter onFilterChange={handleFilterChange} />
                     {loading ? (
                         <div className="flex justify-center my-10">
                             <Spin size="large" />

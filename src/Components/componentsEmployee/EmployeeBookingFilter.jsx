@@ -3,7 +3,7 @@ import { Input, Select, Button } from 'antd';
 
 const { Option } = Select;
 
-const EmployeeCustomerFilter = ({ onFilterChange }) => {
+const EmployeeBookingFilter = ({ onFilterChange }) => {
   const [search, setSearch] = useState('');
   const handleSearch = () => {
     onFilterChange({ search });
@@ -17,7 +17,7 @@ const EmployeeCustomerFilter = ({ onFilterChange }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
       <Input
-        placeholder="Tìm theo Email hoặc CCCD"
+        placeholder="Tìm theo mã phòng hoặc mã khách hàng"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="w-full"
@@ -36,4 +36,4 @@ const EmployeeCustomerFilter = ({ onFilterChange }) => {
   );
 };
 
-export default EmployeeCustomerFilter;
+export default EmployeeBookingFilter;

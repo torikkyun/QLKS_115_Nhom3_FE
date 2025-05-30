@@ -89,7 +89,7 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                                     ? 'bg-green-500/90 text-white border-green-400/50 shadow-lg shadow-green-500/25'
                                     : 'bg-red-500/90 text-white border-red-400/50 shadow-lg shadow-red-500/25'
                             }`}>
-                                {room.tenTinhTrang === "Trống" ? "✓ Có sẵn" : "✗ Đã đặt"}
+                                {room.tenTinhTrang === "Trống" ? " Có sẵn" : " Đã đặt"}
                             </span>
                         </div>
 
@@ -154,7 +154,7 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                                         <span>Không khả dụng</span>
                                     </span>
                                 ) : (
-                                    <span className="flex items-center justify-center space-x-2">
+                                    <span className="flex items-center justify-center space-x-2 cursor-pointer">
                                         <FontAwesomeIcon icon={faEye} />
                                         <span>Xem chi tiết</span>
                                         <FontAwesomeIcon icon={faArrowRight} />

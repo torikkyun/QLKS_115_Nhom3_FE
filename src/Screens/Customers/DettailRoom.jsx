@@ -1,43 +1,51 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Spin, Form, Checkbox, Divider, DatePicker, message, Badge, Select } from 'antd';
+import { Spin, message } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRoom, bookRoom } from '../../apis/apiroom';
 import { getServices } from '../../apis/apiservice';
-import { fetchPromotions } from '../../apis/apipromotion'; // Import the promotion API
+import { fetchPromotions } from '../../apis/apipromotion';
 import Header from '../../Components/componentUser/Header';
-import { InfoCircleOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import Lightbox from 'yet-another-react-lightbox';
-import 'yet-another-react-lightbox/styles.css';
-import dayjs from 'dayjs';
 import { addBooking } from '../../redux/CartSlice';
 import BookingModal from '../../Components/componentUser/BookingModal';
-
-const { RangePicker } = DatePicker;
-const { Option } = Select;
+// import RoomHeader from './components/RoomHeader';
+import RoomImageGallery from '../../Components/componentUser/RoomImage';
+import RoomInfo from '../../Components/componentUser/RoomInfor';
+import BookingDetail from '../../Components/componentUser/BookingDetail';
+import { useRoomBooking } from '../../hooks/useRoomBooking';
 
 const RoomDetail = () => {
   const { maPhong } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const bookings = useSelector(state => state.cart.bookings);
+
   const [loading, setLoading] = useState(false);
-  const [isBookingModalVisible, setIsBookingModalVisible] = useState(false);
-  const [selectedServices, setSelectedServices] = useState([]);
   const [room, setRoom] = useState(null);
   const [services, setServices] = useState([]);
   const [hotel, setHotel] = useState(null);
-  const [dates, setDates] = useState([null, null]);
-  const [numberOfNights, setNumberOfNights] = useState(1);
-  const [customerInfo, setCustomerInfo] = useState({
-    ho: '', ten: '', email: '', sdt: '', cccd: '',
-  });
+  const [promotions, setPromotions] = useState([]);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-  const [selectedBooking, setSelectedBooking] = useState(null);
-  const [promotions, setPromotions] = useState([]);
-  const [selectedPromotion, setSelectedPromotion] = useState(null);
-  const [form] = Form.useForm();
+
+  const {
+    dates,
+    numberOfNights,
+    selectedServices,
+    selectedPromotion,
+    selectedBooking,
+    isBookingModalVisible,
+    customerInfo,
+    form,
+    handleDateChange,
+    handleServiceToggle,
+    handlePromotionChange,
+    calculateBookingTotal,
+    handleAddBooking,
+    handleBookRoom,
+    setSelectedBooking,
+    setIsBookingModalVisible,
+    setCustomerInfo
+  } = useRoomBooking({ room, services, promotions, navigate, dispatch });
 
   const images = [
     { src: 'https://content.r9cdn.net/himg/fc/ab/4a/expedia_group-399971-324e7d-323887.jpg' },
@@ -98,133 +106,6 @@ const RoomDetail = () => {
     }
   };
 
-  const handleDateChange = (dates) => {
-    if (dates && dates[0] && dates[1]) {
-      setDates(dates);
-      const nights = dates[1].diff(dates[0], 'day');
-      setNumberOfNights(nights > 0 ? nights : 1);
-      setSelectedPromotion(null); // Reset selected promotion when dates change
-    } else {
-      setDates([null, null]);
-      setNumberOfNights(1);
-      setSelectedPromotion(null);
-    }
-  };
-
-  const handleServiceToggle = (service, checked) => {
-    if (checked) {
-      if (!selectedServices.includes(service.maDichVu)) {
-        setSelectedServices(prev => [...prev, service.maDichVu]);
-      }
-    } else {
-      setSelectedServices(prev => prev.filter(id => id !== service.maDichVu));
-    }
-  };
-
-  const handlePromotionChange = (maKhuyenMai) => {
-    const promo = promotions.find(p => p.maKhuyenMai === maKhuyenMai) || null;
-    setSelectedPromotion(promo);
-  };
-
-  const isPromotionApplicable = (promo) => {
-    if (!dates[0] || !dates[1]) return false;
-    const checkInDate = dayjs(dates[0]);
-    const checkOutDate = dayjs(dates[1]);
-    const startDate = dayjs(promo.ngayBatDau);
-    const endDate = dayjs(promo.ngayKetThuc);
-
-    // Check if check-in date is within promotion period
-    if (checkInDate.isBefore(startDate) || checkInDate.isAfter(endDate)) return false;
-
-    // Additional conditions based on promotion type
-    if (promo.maKhuyenMai === 3) { // Early booking (30 days in advance)
-      return checkInDate.diff(dayjs(), 'day') >= 30;
-    }
-    if (promo.maKhuyenMai === 4) { // Long-term booking (7+ nights)
-      return numberOfNights >= 7;
-    }
-    if (promo.maKhuyenMai === 2) { // Weekend promotion
-      const checkInDay = checkInDate.day();
-      return checkInDay === 5 || checkInDay === 6 || checkInDay === 0; // Friday, Saturday, Sunday
-    }
-    return true;
-  };
-
-  const calculateBookingTotal = () => {
-    const serviceTotal = services
-      .filter(service => selectedServices.includes(service.maDichVu))
-      .reduce((total, item) => total + (item?.gia || 0), 0);
-    let roomTotal = (room?.giaPhong || 0) * numberOfNights;
-
-    // Apply promotion discount
-    if (selectedPromotion && isPromotionApplicable(selectedPromotion)) {
-      if (selectedPromotion.tenKieuKhuyenMai === 'Phần trăm') {
-        roomTotal *= (1 - selectedPromotion.giaTriKhuyenMai / 100);
-      } else if (selectedPromotion.tenKieuKhuyenMai === 'Giảm giá trực tiếp') {
-        roomTotal -= selectedPromotion.giaTriKhuyenMai;
-      }
-    }
-
-    return Math.max(0, roomTotal + serviceTotal); // Ensure total is not negative
-  };
-
-  const handleAddBooking = () => {
-    if (!dates[0] || !dates[1]) {
-      message.error('Vui lòng chọn ngày nhận và ngày trả phòng');
-      return;
-    }
-    const newBooking = {
-      id: Date.now(),
-      room: { maPhong: room.maPhong, soPhong: room.soPhong, giaPhong: room.giaPhong },
-      dates: [dates[0], dates[1]],
-      numberOfNights,
-      services: services.filter(service => selectedServices.includes(service.maDichVu)),
-      promotion: selectedPromotion, // Include selected promotion
-    };
-    dispatch(addBooking(newBooking));
-    message.success('Đã thêm đặt phòng vào giỏ hàng');
-    navigate('/user/CartPage');
-    setDates([null, null]);
-    setNumberOfNights(1);
-    setSelectedServices([]);
-    setSelectedPromotion(null);
-  };
-
-  const handleBookRoom = async (values) => {
-    setLoading(true);
-    try {
-      if (!selectedBooking) {
-        message.error('Vui lòng chọn một đặt phòng');
-        return;
-      }
-      const bookingData = {
-        maPhong: selectedBooking.room.maPhong,
-        tenKhachHang: `${values.ho} ${values.ten}`,
-        email: values.email,
-        sdt: values.sdt,
-        cccd: values.cccd,
-        ghiChu: values.ghiChu,
-        dichVu: selectedBooking.services.map(item => item.maDichVu),
-        maKhuyenMai: selectedBooking.promotion?.maKhuyenMai || null, // Include promotion ID
-        ngayDat: new Date().toISOString(),
-        ngayNhan: selectedBooking.dates[0].toISOString(),
-        ngayTra: selectedBooking.dates[1].toISOString(),
-      };
-      await bookRoom(bookingData);
-      message.success('Đặt phòng thành công');
-      setIsBookingModalVisible(false);
-      form.resetFields();
-      setCustomerInfo({ ho: '', ten: '', email: '', sdt: '', cccd: '' });
-      setSelectedBooking(null);
-      setSelectedPromotion(null);
-    } catch (error) {
-      console.error('Lỗi khi đặt phòng:', error.message);
-      message.error('Lỗi khi đặt phòng: ' + error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -240,223 +121,74 @@ const RoomDetail = () => {
   return (
     <div className="bg-gray-50 min-h-screen pb-12">
       <Header />
-      <div className="max-w-6xl mx-auto px-4 pt-14">
-        <div className="flex justify-between items-start mb-4 pt-12">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">Phòng {room.soPhong}</h1>
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 pt-14">
+        {/* Header Section - Responsive */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 pt-8 sm:pt-12 space-y-3 sm:space-y-0">
+          <div className="flex-1">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+              Phòng {room.soPhong}
+            </h1>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-start sm:justify-end">
             <div className="flex items-center">
-              <div className="bg-blue-600 text-white font-bold rounded-l px-3 py-1">
+              <div className="bg-blue-600 text-white font-bold rounded-l px-2 sm:px-3 py-1 text-sm sm:text-base">
                 {hotel.danhGia}
               </div>
-              <div className="bg-blue-100 text-blue-800 rounded-r px-3 py-1 font-medium">
+              <div className="bg-blue-100 text-blue-800 rounded-r px-2 sm:px-3 py-1 font-medium text-sm sm:text-base">
                 Tuyệt vời
               </div>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-12 gap-4 mb-8">
-          <div className="col-span-8">
-            <img
-              src={images[0].src}
-              alt={room.soPhong}
-              className="w-full h-96 object-cover rounded-lg shadow-sm cursor-pointer"
-              onClick={() => {
-                setLightboxIndex(0);
-                setLightboxOpen(true);
-              }}
+
+        {/* Image Gallery */}
+        <RoomImageGallery
+          images={images}
+          room={room}
+          lightboxOpen={lightboxOpen}
+          lightboxIndex={lightboxIndex}
+          setLightboxOpen={setLightboxOpen}
+          setLightboxIndex={setLightboxIndex}
+        />
+
+        {/* Main Content Grid - Responsive */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 mt-6">
+          {/* Room Info Section */}
+          <div className="lg:col-span-8 order-2 lg:order-1">
+            <RoomInfo
+              room={room}
+              services={services}
+              selectedServices={selectedServices}
+              handleServiceToggle={handleServiceToggle}
             />
           </div>
-          <div className="col-span-4 flex flex-col space-y-4">
-            <img
-              src={images[1].src}
-              alt="Phòng view 1"
-              className="w-full h-44 object-cover rounded-lg shadow-sm cursor-pointer"
-              onClick={() => {
-                setLightboxIndex(1);
-                setLightboxOpen(true);
-              }}
-            />
-            <img
-              src={images[2].src}
-              alt="Phòng view 2"
-              className="w-full h-44 object-cover rounded-lg shadow-sm cursor-pointer"
-              onClick={() => {
-                setLightboxIndex(2);
-                setLightboxOpen(true);
-              }}
-            />
-          </div>
-          <Lightbox
-            open={lightboxOpen}
-            close={() => setLightboxOpen(false)}
-            slides={images}
-            index={lightboxIndex}
-          />
-        </div>
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-8">
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4 font-semibold">PREVIEW</h2>
-              <div className="text-gray-700 space-y-3">
-                {room.moTa.split('\n').map((line, index) => (
-                  <p key={index}>{line}</p>
-                ))}
-              </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-              <h2 className="text-xl font-semibold mb-4 flex items-center">
-                TỔNG QUAN
-                <div className="ml-2 px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full font-medium">
-                  {room.tenTinhTrang}
-                </div>
-              </h2>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div>
-                  <p className="text-gray-500">Loại phòng</p>
-                  <p className="font-medium">{room.ghiChu}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Số giường</p>
-                  <p className="font-medium">{room.soGiuong}</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Sức chứa</p>
-                  <p className="font-medium">2 người lớn</p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Kích thước</p>
-                  <p className="font-medium">35 m²</p>
-                </div>
-              </div>
-              <Divider />
-              <h3 className="font-semibold mb-2 text-xl">DỊCH VỤ</h3>
-              <div className="grid grid-cols-2 gap-5">
-                {services.map((service, index) => (
-                  <div
-                    key={service.maDichVu}
-                    className={`flex justify-between p-2 rounded-lg transition-all duration-300 hover:bg-gray-50 hover:scale-105 animate__animated animate__fadeInUp animate__delay-${(index % 4) + 1}s`}
-                  >
-                    <Checkbox
-                      checked={selectedServices.includes(service.maDichVu)}
-                      onChange={(e) => handleServiceToggle(service, e.target.checked)}
-                      className="mr-2"
-                    />
-                    <span>{service.tenDichVu || 'Tên không xác định'}</span>
-                    <span className="ml-auto text-gray-500 text-sm">
-                      {(service.gia || 0).toLocaleString()} VND
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="col-span-4">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
-              <h2 className="text-xl font-semibold mb-4">Thông tin đặt phòng</h2>
-              <div className="mb-4">
-                <label className="text-gray-600">Chọn ngày</label>
-                <RangePicker
-                  value={dates}
-                  onChange={handleDateChange}
-                  disabledDate={(current) => current && current < dayjs().startOf('day')}
-                  format="DD/MM/YYYY"
-                  className="w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <label className="text-gray-600">Khuyến mãi</label>
-                <Select
-                  value={selectedPromotion?.maKhuyenMai || null}
-                  onChange={handlePromotionChange}
-                  placeholder="Chọn khuyến mãi"
-                  className="w-full"
-                  disabled={!dates[0] || !dates[1]}
-                >
-                  <Option value={null}>Không áp dụng khuyến mãi</Option>
-                  {promotions
-                    .filter(isPromotionApplicable)
-                    .map(promo => (
-                      <Option key={promo.maKhuyenMai} value={promo.maKhuyenMai}>
-                        {promo.tenKhuyenMai} ({promo.moTaKhuyenMai})
-                      </Option>
-                    ))}
-                </Select>
-              </div>
-              <div className="flex justify-between items-center mb-3 pb-3 border-b">
-                <span className="text-gray-600">Giá phòng / đêm</span>
-                <span className="font-semibold">{(room.giaPhong || 0).toLocaleString()} VND</span>
-              </div>
-              <div className="flex justify-between items-center mb-3 pb-3 border-b">
-                <span className="text-gray-600">Số đêm</span>
-                <span className="font-semibold">{numberOfNights}</span>
-              </div>
-              {selectedServices.length > 0 &&
-                services
-                  .filter(service => selectedServices.includes(service.maDichVu))
-                  .map(item => (
-                    <div key={item.maDichVu} className="flex justify-between items-center mb-3 pb-3 border-b">
-                      <span className="text-gray-600">{item.tenDichVu || 'Tên không xác định'}</span>
-                      <span className="font-semibold">{(item.gia || 0).toLocaleString()} VND</span>
-                    </div>
-                  ))}
-              {selectedPromotion && isPromotionApplicable(selectedPromotion) && (
-                <div className="flex justify-between items-center mb-3 pb-3 border-b">
-                  <span className="text-gray-600">Khuyến mãi ({selectedPromotion.tenKhuyenMai})</span>
-                  <span className="font-semibold text-green-600">
-                    -{selectedPromotion.tenKieuKhuyenMai === 'Phần trăm'
-                      ? `${selectedPromotion.giaTriKhuyenMai}%`
-                      : selectedPromotion.giaTriKhuyenMai.toLocaleString() + ' VND'}
-                  </span>
-                </div>
-              )}
-              <div className="flex justify-between items-center mb-6 pt-2 text-lg">
-                <span className="font-medium">Tổng cộng</span>
-                <span className="font-bold text-blue-600">{calculateBookingTotal().toLocaleString()} VND</span>
-              </div>
-              <Button
-                type="default"
-                block
-                size="large"
-                className="mb-2 border-blue-600 text-blue-600 hover:bg-blue-50"
-                onClick={handleAddBooking}
-                disabled={!dates[0] || !dates[1]}
-              >
-                Thêm vào danh sách
-              </Button>
-              <Button
-                type="primary"
-                block
-                size="large"
-                className="bg-blue-600 hover:bg-blue-700"
-                onClick={() => {
-                  if (!dates[0] || !dates[1]) {
-                    message.error('Vui lòng chọn ngày nhận và ngày trả phòng');
-                    return;
-                  }
-                  const newBooking = {
-                    id: Date.now(),
-                    room: { maPhong: room.maPhong, soPhong: room.soPhong, giaPhong: room.giaPhong },
-                    dates: [dates[0], dates[1]],
-                    numberOfNights,
-                    services: services.filter(service => selectedServices.includes(service.maDichVu)),
-                    promotion: selectedPromotion,
-                  };
-                  setSelectedBooking(newBooking);
+
+          {/* Booking Detail Section */}
+          <div className="lg:col-span-4 order-1 lg:order-2">
+            <div className="sticky top-4">
+              <BookingDetail
+                room={room}
+                services={services}
+                promotions={promotions}
+                dates={dates}
+                numberOfNights={numberOfNights}
+                selectedServices={selectedServices}
+                selectedPromotion={selectedPromotion}
+                handleDateChange={handleDateChange}
+                handlePromotionChange={handlePromotionChange}
+                calculateBookingTotal={calculateBookingTotal}
+                handleAddBooking={handleAddBooking}
+                onBookNow={(booking) => {
+                  setSelectedBooking(booking);
                   setIsBookingModalVisible(true);
                 }}
-                disabled={!dates[0] || !dates[1]}
-              >
-                Đặt phòng ngay
-              </Button>
-              <div className="mt-4 text-center text-sm text-gray-500">
-                <InfoCircleOutlined className="mr-1" /> Không mất phí khi đặt phòng
-              </div>
+              />
             </div>
           </div>
         </div>
       </div>
+
+      {/* Booking Modal */}
       <BookingModal
         visible={isBookingModalVisible}
         isMultiBooking={false}

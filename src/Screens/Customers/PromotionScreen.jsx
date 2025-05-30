@@ -103,27 +103,17 @@ const PromotionScreen = () => {
             src={promotion.hinhAnh || 'https://images.unsplash.com/photo-1607083206869-4c7672e72a8a?w=800&h=400&fit=crop'}
             alt={`Khuyến mãi ${promotion.tenKhuyenMai}`}
           />
-
-          {/* Tiêu đề */}
           <h1 className="text-3xl font-bold text-gray-900 leading-tight">{promotion.tenKhuyenMai}</h1>
-
-          {/* Giá trị giảm giá */}
           <div className="text-2xl font-semibold text-indigo-600">
             Giảm giá: {formatDiscount(promotion.giaTriKhuyenMai, promotion.kieuKhuyenMai)}
           </div>
-
-          {/* Mô tả */}
           <div className="text-gray-700 text-base leading-relaxed">
             <span className="font-semibold">Mô tả:</span> {promotion.moTaKhuyenMai}
           </div>
-
-          {/* Thời gian áp dụng */}
           <div className="text-gray-600 text-sm">
             <span className="font-semibold">Thời gian áp dụng:</span>{' '}
             {formatDate(promotion.ngayBatDau)} - {formatDate(promotion.ngayKetThuc)}
           </div>
-
-          {/* Nút áp dụng */}
           <button
             className="w-full bg-indigo-600 text-white px-4 py-3 rounded-md font-semibold hover:bg-indigo-700 transition-colors duration-200"
             onClick={() => alert('Áp dụng khuyến mãi thành công!')}
@@ -132,8 +122,6 @@ const PromotionScreen = () => {
           </button>
         </div>
       </main>
-
-      {/* Footer */}
       <Footer className="bg-gradient-to-r from-indigo-900 to-purple-900 text-white py-8 transition-all duration-300 ease-in-out" />
     </div>
   );

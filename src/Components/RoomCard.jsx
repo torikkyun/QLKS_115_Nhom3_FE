@@ -154,7 +154,7 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                                         <span>Không khả dụng</span>
                                     </span>
                                 ) : (
-                                    <span className="flex items-center justify-center space-x-2">
+                                    <span className="flex items-center justify-center space-x-2 cursor-pointer">
                                         <FontAwesomeIcon icon={faEye} />
                                         <span>Xem chi tiết</span>
                                         <FontAwesomeIcon icon={faArrowRight} />

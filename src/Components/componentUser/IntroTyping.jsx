@@ -70,7 +70,7 @@ const IntroTyping = ({
         setTimeout(() => {
           setIsVisible(false);
         }, 800);
-      }, 800);
+      }, 500);
       return () => clearTimeout(iconTimer);
     }
   }, [phase]);

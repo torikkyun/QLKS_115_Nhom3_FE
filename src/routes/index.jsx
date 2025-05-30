@@ -13,6 +13,8 @@ import CartPage from "../Screens/Customers/CartPage";
 // import Intro from "../Screens/Customers/Intro";
 import PromotionScreen from "../Screens/Customers/PromotionScreen";
 import AboutUs from "../Screens/Customers/AboutUs";
+import InvoicePage from "../Screens/Customers/InvoicePage";
+import Rooms from "../Screens/Customers/Rooms";
 
 export const router = createBrowserRouter([
     {
@@ -70,6 +72,16 @@ export const router = createBrowserRouter([
     {
         path: "/user/aboutus",
         element: <AboutUs />,
+    },
+    {
+        path: "/user/invoice/:maDatPhong",
+        element: <InvoicePage />,
+    },
+    {
+        path: "user/rooms",
+        element: <Rooms />,
     }
+
+
 
 ]);

@@ -58,7 +58,7 @@ const Introduction = () => {
         return (
           <div
             key={index}
-            className={`min-h-screen flex flex-col lg:flex-row gap-8 lg:gap-20 px-6 lg:px-20 py-12 lg:py-20 ${
+            className={`min-h-screen flex flex-col lg:flex-row gap-8 lg:gap-20 px-6 lg:px-20  lg:py-20 ${
               index % 2 === 0 ? 'bg-white' : 'bg-gradient-to-br from-gray-50 to-gray-100'
             } ${isReverse ? 'lg:flex-row-reverse' : ''}`}
           >

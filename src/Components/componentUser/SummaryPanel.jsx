@@ -1,12 +1,66 @@
 import React from 'react';
 import { Button, Divider } from 'antd';
+import dayjs from 'dayjs';
 
 const SummaryPanel = ({ bookings, onBookAll, onClearAll }) => {
+  // Hàm kiểm tra điều kiện áp dụng khuyến mãi (tương tự RoomDetail.js)
+  const isPromotionApplicable = (promo, dates) => {
+    if (!dates[0] || !dates[1]) return false;
+    const checkInDate = dayjs(dates[0]);
+    const checkOutDate = dayjs(dates[1]);
+    const startDate = dayjs(promo.ngayBatDau);
+    const endDate = dayjs(promo.ngayKetThuc);
+
+    const isWithinPeriod = !checkInDate.isBefore(startDate) && !checkInDate.isAfter(endDate);
+    console.log('Promotion Check:', {
+      checkInDate: checkInDate.format('DD/MM/YYYY'),
+      startDate: startDate.format('DD/MM/YYYY'),
+      endDate: endDate.format('DD/MM/YYYY'),
+      isWithinPeriod,
+      maKhuyenMai: promo.maKhuyenMai,
+    });
+
+    return isWithinPeriod;
+  };
+
   const calculateCartTotal = () => {
     return bookings.reduce((total, booking) => {
       const serviceTotal = booking.services.reduce((sum, item) => sum + (item?.gia || 0), 0);
-      return total + serviceTotal + (booking.room?.giaPhong || 0) * booking.numberOfNights;
+      let roomTotal = (booking.room?.giaPhong || 0) * booking.numberOfNights;
+
+      const promotion = booking.promotion;
+      console.log('Promotion for booking:', { bookingId: booking.id, promotion }); // Debug
+      if (promotion && isPromotionApplicable(promotion, booking.dates)) {
+        const kieuKhuyenMai = promotion.kieuKhuyenMai || 'Phần trăm';
+        let giaTriKhuyenMai = promotion.giaTriKhuyenMai || 0;
+
+        if (promotion.moTaKhuyenMai?.includes('20%')) {
+          giaTriKhuyenMai = 20;
+          console.log('Overriding giaTriKhuyenMai to 20% due to moTaKhuyenMai:', promotion.moTaKhuyenMai);
+        }
+
+        if (kieuKhuyenMai === 'Phần trăm') {
+          roomTotal *= (1 - giaTriKhuyenMai / 100);
+          console.log('Applied percentage discount:', { roomTotal, giaTriKhuyenMai });
+        } else if (kieuKhuyenMai === 'Giảm giá trực tiếp') {
+          roomTotal -= giaTriKhuyenMai;
+          console.log('Applied direct discount:', { roomTotal, giaTriKhuyenMai });
+        }
+      } else {
+        console.log('No promotion applied for booking:', booking.id);
+      }
+
+      return total + serviceTotal + Math.max(0, roomTotal);
     }, 0);
+  };
+
+  const renderPromotionInfo = (promotion) => {
+    if (!promotion) return 'Không áp dụng khuyến mãi';
+    const { tenKhuyenMai, maKhuyenMai, kieuKhuyenMai, giaTriKhuyenMai } = promotion;
+    const discountText = kieuKhuyenMai === 'Phần trăm'
+      ? `(-${giaTriKhuyenMai}%)`
+      : `(-${giaTriKhuyenMai.toLocaleString()} VND)`;
+    return `${tenKhuyenMai} ${discountText}`;
   };
 
   return (
@@ -26,6 +80,17 @@ const SummaryPanel = ({ bookings, onBookAll, onClearAll }) => {
               </span>
             </div>
           </div>
+          <Divider className="my-6" />
+          {bookings.map((booking, index) => (
+            <div key={index} className="bg-gradient-to-r from-yellow-50 to-yellow-100 rounded-xl p-4">
+              <div className="text-center">
+                <p className="text-gray-600 mb-2">Khuyến mãi (Phòng {booking.room?.soPhong})</p>
+                <p className="text-sm font-semibold text-green-600">
+                  {renderPromotionInfo(booking.promotion)}
+                </p>
+              </div>
+            </div>
+          ))}
           <Divider className="my-6" />
           <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4">
             <div className="text-center">

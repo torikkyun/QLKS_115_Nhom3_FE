@@ -1,0 +1,71 @@
+import React from 'react';
+import { Checkbox, Divider } from 'antd';
+
+const RoomInfo = ({ room, services, selectedServices, handleServiceToggle }) => {
+  return (
+    <>
+      {/* Room Description */}
+      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4">PREVIEW</h2>
+        <div className="text-gray-700 space-y-3">
+          {room.moTa.split('\n').map((line, index) => (
+            <p key={index}>{line}</p>
+          ))}
+        </div>
+      </div>
+
+      {/* Room Overview */}
+      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <h2 className="text-xl font-semibold mb-4 flex items-center">
+          TỔNG QUAN
+          <div className="ml-2 px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full font-medium">
+            {room.tenTinhTrang}
+          </div>
+        </h2>
+        
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <p className="text-gray-500">Loại phòng</p>
+            <p className="font-medium">{room.ghiChu}</p>
+          </div>
+          <div>
+            <p className="text-gray-500">Số giường</p>
+            <p className="font-medium">{room.soGiuong}</p>
+          </div>
+          <div>
+            <p className="text-gray-500">Sức chứa</p>
+            <p className="font-medium">2 người lớn</p>
+          </div>
+          <div>
+            <p className="text-gray-500">Kích thước</p>
+            <p className="font-medium">35 m²</p>
+          </div>
+        </div>
+
+        <Divider />
+        
+        <h3 className="font-semibold mb-2 text-xl">DỊCH VỤ</h3>
+        <div className="grid grid-cols-2 gap-5 group">
+          {services.map((service, index) => (
+            <div
+              key={service.maDichVu}
+              className={`flex justify-between p-2 rounded-lg transition-all duration-300 hover:bg-blue-300 transition-colors cursor-pointer hover:scale-105 animate__animated animate__fadeInUp -${(index % 4) + 1}s`}
+            >
+              <Checkbox
+                checked={selectedServices.includes(service.maDichVu)}
+                onChange={(e) => handleServiceToggle(service, e.target.checked)}
+                className="mr-2 w-6 h-6 "
+              />
+              <span className="font-medium text-blue-600 text-lg pl-5">{service.tenDichVu || 'Tên không xác định'}</span>
+              <span className="ml-auto text-gray-500 text-sm">
+                {(service.gia || 0).toLocaleString()} VND
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default RoomInfo;

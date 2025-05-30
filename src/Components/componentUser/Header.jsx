@@ -104,12 +104,6 @@ const Header = () => {
     { path: '/user/aboutus', label: t('about') },
   ];
 
-  const handleSearch = (value) => {
-    if (value.trim()) {
-      navigate(`/user/search?q=${encodeURIComponent(value)}`);
-      setSearchVisible(false);
-    }
-  };
 
   return (
     <>
@@ -246,7 +240,7 @@ const Header = () => {
         className="lg:hidden"
       >
         <div className="space-y-4">
-          <Search placeholder={t('search_placeholder')} onSearch={handleSearch} className="mb-4" />
+          {/* <Search placeholder={t('search_placeholder')} onSearch={handleSearch} className="mb-4" /> */}
           <nav className="space-y-2">
             {navItems.map((item) => (
               <NavLink

@@ -102,17 +102,18 @@ const PromotionBanner = () => {
   }
 
   return (
-    <div className="w-full bg-gray-100 pl-20 pr-20 pt-30 pb-20 flex flex-col md:flex-row gap-6 md:gap-20">
+    <div className="w-full bg-gray-100 pl-20 pr-20 pt-30 pb-20 flex flex-col md:flex-row gap-6 md:gap-20 italic">
       <div className="mb-6 md:mb-8 max-w-full md:max-w-2xl">
-        <h2 className="text-2xl md:text-4xl italic text-red-600 mb-2">TẬN HƯỞNG ƯU ĐÃI HẤP DẪN</h2>
+        <h2 className="text-2xl md:text-4xl semibold italic text-red-600 mb-2">TẬN HƯỞNG ƯU ĐÃI HẤP DẪN</h2>
         <p className="text-sm md:text-base text-gray-700 italic">
-          TẬN HƯỞNG KỲ NGHỈ TRỌN VẸN VỚI ƯU ĐÃI MÙA THU HẤP DẪN CHƯA TỪNG CÓ
+          Tận hưởng kỳ nghỉ trọn vẹn với ưu đãi mùa thu hấp dẫn chưa từng có tại Ville De Mont.
+          <br />
           Nghỉ dưỡng riêng tư trong những căn biệt thự boutique cao cấp, ẩn mình trong rừng thông. Mỗi căn phòng đều sở hữu tầm view kỳ vĩ với những khoảnh khắc đắt giá của thiên: bình minh, hoàng hôn, biển mây… diễn ra ngay bên ngoài khung cửa.
           Thưởng thức ẩm thực bản địa tinh tế được chuẩn bị bởi đội ngũ đầu bếp đầy say mê, bàn tiệc ngoài trời lãng mạn sẽ mang đến cho bạn cảm xúc mới mẻ chưa từng có.
           Thư giãn với bể sục bốn mùa ngắm thung lũng, hay xoa dịu cơ thể với bồn tắm lá thuốc Dao đỏ ngay tại villa của bạn.
           Thoát khỏi những điều bình thường và đắm mình trong những trải nghiệm chưa từng có tại Ville De Mont.
         </p>
-        <a href="#" className="text-sm md:text-base text-red-500 mt-2 inline-block">Đọc thêm</a>
+        <a href="#" className="text-sm md:text-base text-red-500 mt-2 inline-block hover:underline">Đọc thêm</a>
       </div>
 
       <div className="w-full max-w-4xl">

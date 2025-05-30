@@ -105,7 +105,7 @@ const CartPage = () => {
           </div>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-16 -mt-8 relative z-10 pb-16">
         {bookings.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-xl p-12 text-center">
             <div className="mb-8">
@@ -175,6 +175,7 @@ const CartPage = () => {
         form={form}
         customerInfo={customerInfo}
         setCustomerInfo={setCustomerInfo}
+       
       />
     </div>
   );

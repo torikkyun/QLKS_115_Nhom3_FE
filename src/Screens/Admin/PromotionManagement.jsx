@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal, Form, Input, DatePicker, Select, message, Space, Popconfirm } from 'antd';
+import { Table, Button, Modal, Form, Input, DatePicker, Select, message, Space, Popconfirm, Spin, Pagination as AntdPagination } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { fetchPromotions, fetchPromotionTypes, createPromotion, updatePromotion, deletePromotion } from '../../apis/apipromotion';
@@ -17,44 +17,63 @@ const PromotionsPage = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [currentPromo, setCurrentPromo] = useState(null);
-    const [pagination, setPagination] = useState({
-        current: 1,
-        pageSize: 10,
-        total: 0,
-    });
+    const [pagination, setPagination] = useState({ page: 1, pageSize: 10, totalPages: 1, totalRecords: 0 });
 
-    const loadPromotions = async (page = 1, pageSize = 10) => {
+    const fetchPromotionsData = async () => {
         setLoading(true);
-        const data = await fetchPromotions(page, pageSize);
-        setPromotions(data);
-        setPagination({
-            current: page,
-            pageSize,
-            total: data.length ? data.length * 10 : 0,
-        });
-        setLoading(false);
-    };
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token không tồn tại. Vui lòng đăng nhập lại.');
+            }
 
-    const loadPromotionTypes = async () => {
-        const types = await fetchPromotionTypes();
-        if (types.length === 0 || !types.every(type => type.id && type.tenKieuKhuyenMai)) {
-            // Sử dụng giá trị mặc định nếu API không trả về dữ liệu hợp lệ
-            setPromotionTypes([
-                { id: 1, tenKieuKhuyenMai: 'Phần trăm' },
-                { id: 2, tenKieuKhuyenMai: 'Trực tiếp' },
-            ]);
-        } else {
-            setPromotionTypes(types);
+            const response = await fetchPromotions(pagination.page, pagination.pageSize);
+            console.log('API Response:', response);
+
+            if (!response || typeof response !== 'object') {
+                throw new Error('Phản hồi API không hợp lệ');
+            }
+
+            const fetchedPromotions = Array.isArray(response.data) ? response.data : [];
+            setPromotions(fetchedPromotions);
+            setPagination({
+                page: response.page || 1,
+                pageSize: response.pageSize || 10,
+                totalPages: response.totalPages || 1,
+                totalRecords: response.totalRecords || fetchedPromotions.length || 0,
+            });
+        } catch (error) {
+            console.error('Lỗi khi gọi API:', error.message);
+            message.error('Lỗi khi tải danh sách khuyến mãi: ' + error.message);
+            setPromotions([]);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-        loadPromotions();
+        fetchPromotionsData();
         loadPromotionTypes();
-    }, []);
+    }, [pagination.page, pagination.pageSize]);
 
-    const handleTableChange = (pagination) => {
-        loadPromotions(pagination.current, pagination.pageSize);
+    const loadPromotionTypes = async () => {
+        try {
+            const types = await fetchPromotionTypes();
+            if (types.length === 0 || !types.every(type => type.id && type.tenKieuKhuyenMai)) {
+                setPromotionTypes([
+                    { id: 1, tenKieuKhuyenMai: 'Phần trăm' },
+                    { id: 2, tenKieuKhuyenMai: 'Trực tiếp' },
+                ]);
+            } else {
+                setPromotionTypes(types);
+            }
+        } catch (error) {
+            console.error('Lỗi khi lấy danh sách kiểu khuyến mãi:', error.message);
+        }
+    };
+
+    const handleTableChange = (page, pageSize) => {
+        setPagination({ ...pagination, page, pageSize });
     };
 
     const handleCreate = () => {
@@ -71,7 +90,7 @@ const PromotionsPage = () => {
             moTaKhuyenMai: promo.moTaKhuyenMai,
             dateRange: [moment(promo.ngayBatDau), moment(promo.ngayKetThuc)],
             giaTriKhuyenMai: promo.giaTriKhuyenMai,
-            kieuKhuyenMai: parseInt(promo.kieuKhuyenMai), // Đảm bảo là số
+            kieuKhuyenMai: parseInt(promo.kieuKhuyenMai),
             ghiChu: promo.ghiChu,
         });
         setModalVisible(true);
@@ -85,8 +104,8 @@ const PromotionsPage = () => {
                 moTaKhuyenMai: values.moTaKhuyenMai,
                 ngayBatDau: values.dateRange[0].format('YYYY-MM-DD'),
                 ngayKetThuc: values.dateRange[1].format('YYYY-MM-DD'),
+                kieuKhuyenMai: parseInt(values.kieuKhuyenMai),
                 giaTriKhuyenMai: parseFloat(values.giaTriKhuyenMai) || 0,
-                kieuKhuyenMai: parseInt(values.kieuKhuyenMai), // Đảm bảo là số
                 ghiChu: values.ghiChu || '',
             };
 
@@ -101,7 +120,7 @@ const PromotionsPage = () => {
             let result;
             if (isEditing) {
                 result = await updatePromotion(currentPromo.maKhuyenMai, promoData);
-                if (result && result.maKhuyenMai) {
+                if (result) {
                     setPromotions(
                         promotions.map((p) =>
                             p.maKhuyenMai === currentPromo.maKhuyenMai ? { ...p, ...result } : p
@@ -109,17 +128,20 @@ const PromotionsPage = () => {
                     );
                     message.success('Cập nhật khuyến mãi thành công!');
                 } else {
-                    throw new Error('Cập nhật thất bại, dữ liệu không hợp lệ!');
+                    throw new Error('Cập nhật thất bại!');
                 }
             } else {
                 result = await createPromotion(promoData);
-                if (result && result.maKhuyenMai) {
-                    setPromotions([...promotions, result]);
+                console.log('Kết quả từ createPromotion:', result);
+
+                if (result) {
+                    fetchPromotionsData();
                     message.success('Tạo khuyến mãi thành công!');
                 } else {
-                    throw new Error('Tạo thất bại, dữ liệu không hợp lệ!');
+                    throw new Error('Tạo thất bại!');
                 }
             }
+
             setModalVisible(false);
             form.resetFields();
         } catch (error) {
@@ -129,12 +151,13 @@ const PromotionsPage = () => {
     };
 
     const handleDelete = async (id) => {
-        const success = await deletePromotion(id);
-        if (success) {
-            setPromotions(promotions.filter(p => p.maKhuyenMai !== id));
+        try {
+            await deletePromotion(id);
             message.success('Xóa khuyến mãi thành công!');
-        } else {
-            message.error('Xóa khuyến mãi thất bại!');
+            fetchPromotionsData();
+        } catch (error) {
+            console.error('Lỗi khi xóa khuyến mãi:', error.message);
+            message.error('Lỗi khi xóa khuyến mãi: ' + error.message);
         }
     };
 
@@ -143,7 +166,7 @@ const PromotionsPage = () => {
             title: 'STT',
             dataIndex: 'stt',
             key: 'stt',
-            render: (_, __, index) => index + 1,
+            render: (_, __, index) => (pagination.page - 1) * pagination.pageSize + index + 1,
         },
         {
             title: 'Tên Khuyến mãi',
@@ -174,8 +197,8 @@ const PromotionsPage = () => {
         },
         {
             title: 'Kiểu',
-            dataIndex: 'kieuKhuyenMai',
-            key: 'kieuKhuyenMai',
+            dataIndex: 'tenKieuKhuyenMai',
+            key: 'tenKieuKhuyenMai',
         },
         {
             title: 'Ghi chú',
@@ -209,7 +232,7 @@ const PromotionsPage = () => {
     ];
 
     return (
-        <div className="flex h-screen ">
+        <div className="flex h-screen">
             <SideBar />
             <div className="flex flex-col flex-1">
                 <Header />
@@ -225,15 +248,27 @@ const PromotionsPage = () => {
                             Tạo Khuyến mãi
                         </Button>
                     </div>
-                    <Table
-                        columns={columns}
-                        dataSource={promotions}
-                        rowKey="maKhuyenMai"
-                        loading={loading}
-                        pagination={pagination}
-                        onChange={handleTableChange}
-                        className="bg-white rounded-lg shadow-md"
-                        rowClassName="hover:bg-gray-50"
+                    {loading ? (
+                        <div className="flex justify-center my-10">
+                            <Spin size="large" />
+                        </div>
+                    ) : (
+                        <Table
+                            columns={columns}
+                            dataSource={promotions}
+                            rowKey="maKhuyenMai"
+                            className="bg-white rounded-lg shadow-md"
+                            rowClassName="hover:bg-gray-50"
+                        />
+                    )}
+                    <AntdPagination
+                        current={pagination.page}
+                        pageSize={pagination.pageSize}
+                        total={pagination.totalRecords}
+                        onChange={(page, pageSize) => handleTableChange(page, pageSize)}
+                        showSizeChanger
+                        pageSizeOptions={['10', '20', '50']}
+                        className="mt-4 flex justify-end"
                     />
                     <Modal
                         classNames={"pb-2"}
@@ -271,28 +306,39 @@ const PromotionsPage = () => {
                                 <RangePicker format="YYYY-MM-DD" style={{ width: '100%' }} />
                             </Form.Item>
                             <Form.Item
-                                name="giaTriKhuyenMai"
-                                label="Giá trị (VNĐ nếu Trực tiếp, % nếu Phần trăm)"
-                                rules={[
-                                    { required: true, message: 'Vui lòng nhập giá trị khuyến mãi!' },
-                                    { type: 'number', min: 0, message: 'Giá trị phải lớn hơn hoặc bằng 0!' },
-                                ]}
-                                normalize={(value) => (value ? parseFloat(value) : value)}
-                            >
-                                <Input type="number" placeholder="Nhập giá trị khuyến mãi" />
-                            </Form.Item>
-                            <Form.Item
-                                name="kieuKhuyenMai"
+                                name="tenKieuKhuyenMai"
                                 label="Kiểu Khuyến mãi"
                                 rules={[{ required: true, message: 'Vui lòng chọn kiểu khuyến mãi!' }]}
                             >
-                                <Select placeholder="Chọn kiểu khuyến mãi">
+                                <Select placeholder="Chọn kiểu khuyến mãi" onChange={() => form.validateFields(['giaTriKhuyenMai'])}>
                                     {promotionTypes.map(type => (
                                         <Option key={type.id} value={type.id}>
                                             {type.tenKieuKhuyenMai}
                                         </Option>
                                     ))}
                                 </Select>
+                            </Form.Item>
+                            <Form.Item
+                                name="giaTriKhuyenMai"
+                                label="Giá trị"
+                                rules={[
+                                    { required: true, message: 'Vui lòng nhập giá trị khuyến mãi!' },
+                                    ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                            const kieuKhuyenMai = getFieldValue('kieuKhuyenMai');
+                                            if (kieuKhuyenMai === 1 && (value < 0 || value > 100)) {
+                                                return Promise.reject(new Error('Phần trăm phải từ 0 đến 100!'));
+                                            }
+                                            if (kieuKhuyenMai === 2 && value < 0) {
+                                                return Promise.reject(new Error('Giá trị trực tiếp phải lớn hơn hoặc bằng 0!'));
+                                            }
+                                            return Promise.resolve();
+                                        },
+                                    }),
+                                ]}
+                                normalize={(value) => (value ? parseFloat(value) : value)}
+                            >
+                                <Input type="number" placeholder="Nhập giá trị khuyến mãi" />
                             </Form.Item>
                             <Form.Item
                                 name="ghiChu"
@@ -308,4 +354,4 @@ const PromotionsPage = () => {
     );
 };
 
-export default PromotionsPage;
+export default PromotionsPage;  

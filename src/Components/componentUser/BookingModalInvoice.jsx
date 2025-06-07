@@ -50,7 +50,7 @@ const BookingDetails = ({
               <div className="text-center mt-2 pt-2 border-t border-gray-100">
                 <p className="text-xs text-gray-600">{t('total', { defaultValue: 'Tổng tiền' })}</p>
                 <p className="font-bold text-blue-600 text-sm">{calculateBookingTotal(booking).toLocaleString()} VND</p>
-              </div>
+              </div>  
             </div>
           ))}
         </div>

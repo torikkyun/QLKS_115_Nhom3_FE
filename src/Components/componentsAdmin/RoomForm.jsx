@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Input, Select, InputNumber } from 'antd';
+import { Modal, Form, Input, Select } from 'antd';
 
 const { Option } = Select;
 
@@ -11,10 +11,32 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
       .validateFields()
       .then((values) => {
         console.log('Form values:', values);
-        // Chuyển đổi tenTinhTrang thành tinhTrangPhong (số) để gửi cho API
+        // Tự động tính giá và số giường dựa trên maLoaiPhong
+        let giaPhong;
+        let soGiuong;
+        switch (values.maLoaiPhong) {
+          case 1: // Phòng đơn
+            giaPhong = 500000;
+            soGiuong = 1;
+            break;
+          case 2: // Phòng đôi
+            giaPhong = 700000;
+            soGiuong = 2;
+            break;
+          case 3: // Phòng gia đình
+            giaPhong = 1000000;
+            soGiuong = 3;
+            break;
+          default:
+            giaPhong = 0;
+            soGiuong = 0;
+        }
+        // Chuyển đổi tenTinhTrang thành tinhTrangPhong và thêm các giá trị tự động
         const transformedValues = {
           ...values,
           tinhTrangPhong: values.tenTinhTrang, // Gửi tinhTrangPhong (0 hoặc 1)
+          giaPhong, // Thêm giá tự động
+          soGiuong, // Thêm số giường tự động
         };
         delete transformedValues.tenTinhTrang; // Xóa tenTinhTrang khỏi dữ liệu gửi đi
         console.log('Transformed values for API:', transformedValues);
@@ -57,20 +79,6 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
             <Option value={2}>Phòng đôi</Option>
             <Option value={3}>Phòng gia đình</Option>
           </Select>
-        </Form.Item>
-        <Form.Item
-          name="soGiuong"
-          label="Số Giường"
-          rules={[{ required: true, message: 'Vui lòng nhập số giường' }]}
-        >
-          <InputNumber min={1} className="w-full" />
-        </Form.Item>
-        <Form.Item
-          name="giaPhong"
-          label="Giá Phòng"
-          rules={[{ required: true, message: 'Vui lòng nhập giá phòng' }]}
-        >
-          <InputNumber min={0} className="w-full" />
         </Form.Item>
         <Form.Item
           name="tenTinhTrang"

@@ -124,7 +124,7 @@ const BookingPanel = ({
         <div className="flex justify-between items-center mb-3 pb-3 border-b">
           <span className="text-gray-600">Khuyến mãi ({selectedPromotion.tenKhuyenMai})</span>
           <span className="font-semibold text-green-600">
-            -{selectedPromotion.kieuKhuyenMai === 'Phần trăm'
+            -{selectedPromotion.tenKieuKhuyenMai === 'Phần trăm'
               ? `${selectedPromotion.giaTriKhuyenMai}%`
               : selectedPromotion.giaTriKhuyenMai.toLocaleString() + ' VND'}
           </span>

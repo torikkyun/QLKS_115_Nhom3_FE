@@ -252,13 +252,7 @@ const StaffManagement = () => {
                             initialValues={editingStaff}
                             onFinish={handleSaveStaff}
                         >
-                            <Form.Item
-                                name="maNhanVien"
-                                label="Mã nhân viên"
-                                rules={[{ required: true, message: 'Vui lòng nhập mã nhân viên' }]}
-                            >
-                                <Input disabled={!!editingStaff} />
-                            </Form.Item>
+                            
                             <Form.Item
                                 name="ho"
                                 label="Họ"

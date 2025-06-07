@@ -1,25 +1,25 @@
 import { createBrowserRouter } from "react-router-dom";
 import LoginScreen from "../Screens/LoginScreen";
 import SignUpScreen from "../Screens/SignUpScreen";
-import Dashboard from "../Screens/Customers/Dashboard";
+import DashboardPage from "../Screens/Customers/DashboardPage";
 import RoomManagement from "../Screens/Admin/RoomManagement";
 import EmployeeManegement from "../Screens/Admin/EmployeeManagement";
 import PromotionsPage from "../Screens/Admin/PromotionManagement";
 import AdminDashBoard from "../Screens/Admin/AdminDashBoard";
 import ServiceManagement from "../Screens/Admin/ServiceManagement";
 import BillManagement from "../Screens/Admin/BillManagement";
-import DetailRoom from "../Screens/Customers/DettailRoom";
+import DetailRoomPage from "../Screens/Customers/DettailRoomPage";
 import CartPage from "../Screens/Customers/CartPage";
 // import Intro from "../Screens/Customers/Intro";
-import PromotionScreen from "../Screens/Customers/PromotionScreen";
-import AboutUs from "../Screens/Customers/AboutUs";
+import PromotionPage from "../Screens/Customers/PromotionPage";
+import AboutUsPage from "../Screens/Customers/AboutUsPage";
 import InvoicePage from "../Screens/Customers/InvoicePage";
-import Rooms from "../Screens/Customers/Rooms";
+import RoomsPage from "../Screens/Customers/RoomsPage";
 
 export const router = createBrowserRouter([
     {
         path: "/",
-        element: <Dashboard />,
+        element: <DashboardPage />,
     },
     {
         path: "/login",
@@ -31,7 +31,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/user/home",
-        element: <Dashboard />, // Home.jsx
+        element: <DashboardPage />, // Home.jsx
     },
     {
         path: "/admin/dashboard",
@@ -59,7 +59,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/user/detailroom/:maPhong",
-        element: <DetailRoom />, // DetailRoom.jsx
+        element: <DetailRoomPage />, // DetailRoom.jsx
     },
     {
         path: "/user/CartPage",
@@ -67,11 +67,11 @@ export const router = createBrowserRouter([
     },
     {
         path: "/user/promotion/:maKhuyenMai",
-        element: <PromotionScreen />,
+        element: <PromotionPage />,
     },
     {
         path: "/user/aboutus",
-        element: <AboutUs />,
+        element: <AboutUsPage />,
     },
     {
         path: "/user/invoice/:maDatPhong",
@@ -79,7 +79,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "user/rooms",
-        element: <Rooms />,
+        element: <RoomsPage />,
     }
 
 

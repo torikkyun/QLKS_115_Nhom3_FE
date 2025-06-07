@@ -32,7 +32,7 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
     const promotion = booking.promotion;
     console.log('Promotion for BookingItem:', { bookingId: booking.id, promotion }); // Debug
     if (promotion && isPromotionApplicable(promotion, booking.dates)) {
-      const kieuKhuyenMai = promotion.kieuKhuyenMai || 'Phần trăm';
+      const tenKieuKhuyenMai = promotion.tenKieuKhuyenMai || 'Phần trăm';
       let giaTriKhuyenMai = promotion.giaTriKhuyenMai || 0;
 
       // Nếu mô tả khuyến mãi có chứa "20%", sử dụng 20% thay vì giá trị không nhất quán
@@ -41,10 +41,10 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
         console.log('Overriding giaTriKhuyenMai to 20% due to moTaKhuyenMai:', promotion.moTaKhuyenMai);
       }
 
-      if (kieuKhuyenMai === 'Phần trăm') {
+      if (tenKieuKhuyenMai === 'Phần trăm') {
         roomTotal *= (1 - giaTriKhuyenMai / 100);
         console.log('Applied percentage discount:', { roomTotal, giaTriKhuyenMai });
-      } else if (kieuKhuyenMai === 'Giảm giá trực tiếp') {
+      } else if (tenKieuKhuyenMai === 'Giảm giá trực tiếp') {
         roomTotal -= giaTriKhuyenMai;
         console.log('Applied direct discount:', { roomTotal, giaTriKhuyenMai });
       }
@@ -58,8 +58,8 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
   // Hàm hiển thị thông tin khuyến mãi
   const renderPromotionInfo = (promotion) => {
     if (!promotion) return 'Không áp dụng khuyến mãi';
-    const { tenKhuyenMai, maKhuyenMai, kieuKhuyenMai, giaTriKhuyenMai } = promotion;
-    const discountText = kieuKhuyenMai === 'Phần trăm'
+    const { tenKhuyenMai, maKhuyenMai, tenKieuKhuyenMai, giaTriKhuyenMai } = promotion;
+    const discountText = tenKieuKhuyenMai === 'Phần trăm'
       ? `(-${giaTriKhuyenMai}%)`
       : `(-${giaTriKhuyenMai.toLocaleString()} VND)`;
     return `${tenKhuyenMai}  ${discountText}`;

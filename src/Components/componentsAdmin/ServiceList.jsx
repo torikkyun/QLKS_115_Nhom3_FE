@@ -23,6 +23,12 @@ const ServiceList = ({ services, onEdit, onDelete }) => {
             render: (text) => text || 'N/A',
         },
         {
+            title: 'Giá Dịch Vụ',
+            dataIndex: 'giaDichVu',
+            key: 'giaDichVu',
+            render: (text) => text || 'N/A',
+        },
+        {
             title: 'Ghi Chú',
             dataIndex: 'ghiChu',
             key: 'ghiChu',

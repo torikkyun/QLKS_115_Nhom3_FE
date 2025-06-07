@@ -25,7 +25,7 @@ const PromotionBanner = () => {
       setLoading(true);
       try {
         const data = await fetchPromotions(1, 10);
-        setPromotions(data);
+        setPromotions(data.data || []); // Chỉ lấy data từ phản hồi
       } catch (error) {
         console.error('Error loading promotions:', error);
       } finally {
@@ -45,14 +45,13 @@ const PromotionBanner = () => {
     const interval = setInterval(() => {
       setCurrentStep((prevStep) => {
         const nextStep = (prevStep + 1) % 4; 
-
         const zigzagOrder = [0, 1, 3, 2];
         const positionToUpdate = zigzagOrder[nextStep];
 
         setCurrentIndices((prevIndices) => {
           const newIndices = [...prevIndices];
           const currentIndex = newIndices[positionToUpdate];
-          newIndices[positionToUpdate] = (currentIndex + 4) % promotions.length;
+          newIndices[positionToUpdate] = (currentIndex + 1) % promotions.length; // Cập nhật index theo thứ tự
           return newIndices;
         });
 
@@ -65,14 +64,14 @@ const PromotionBanner = () => {
 
   const goToPrev = () => {
     setCurrentIndices((prevIndices) =>
-      prevIndices.map((index) => (index - 4 + promotions.length) % promotions.length)
+      prevIndices.map((index) => (index - 1 + promotions.length) % promotions.length)
     );
     setCurrentStep(0);
   };
 
   const goToNext = () => {
     setCurrentIndices((prevIndices) =>
-      prevIndices.map((index) => (index + 4) % promotions.length)
+      prevIndices.map((index) => (index + 1) % promotions.length)
     );
     setCurrentStep(0); 
   };
@@ -120,6 +119,8 @@ const PromotionBanner = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
           {currentIndices.map((promoIndex, gridIndex) => {
             const promotion = promotions[promoIndex];
+            // Kiểm tra nếu promotion không tồn tại, bỏ qua render
+            if (!promotion) return null;
             return (
               <div
                 key={`${promoIndex}-${gridIndex}`}
@@ -144,7 +145,6 @@ const PromotionBanner = () => {
         </div>
         {/* Nút điều khiển và dot */}
         <div className="mt-4 flex flex-col items-center">
-        
           <div className="flex space-x-2">
             {Array.from({ length: Math.ceil(promotions.length / 4) }).map((_, index) => (
               <button

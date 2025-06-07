@@ -8,7 +8,6 @@ import { fetchPromotions } from '../../apis/apipromotion';
 import Header from '../../Components/componentUser/Header';
 import { addBooking } from '../../redux/CartSlice';
 import BookingModal from '../../Components/componentUser/BookingModal';
-// import RoomHeader from './components/RoomHeader';
 import RoomImageGallery from '../../Components/componentUser/RoomImage';
 import RoomInfo from '../../Components/componentUser/RoomInfor';
 import BookingDetail from '../../Components/componentUser/BookingDetail';
@@ -97,7 +96,7 @@ const RoomDetail = () => {
 
       // Fetch promotions
       const promotionsResponse = await fetchPromotions(1, 100);
-      setPromotions(promotionsResponse || []);
+      setPromotions(promotionsResponse.data || []); // Chỉ lấy data (mảng khuyến mãi)
     } catch (error) {
       console.error('Lỗi khi lấy dữ liệu:', error.message);
       message.error('Lỗi khi tải dữ liệu: ' + error.message);

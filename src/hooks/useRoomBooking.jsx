@@ -83,12 +83,12 @@ export const useRoomBooking = ({ room, services, promotions, navigate, dispatch 
 
     // Apply promotion discount
     if (selectedPromotion && isPromotionApplicable(selectedPromotion)) {
-      if (selectedPromotion.kieuKhuyenMai === 'Phần trăm') {
+      if (selectedPromotion.tenKieuKhuyenMai === 'Phần trăm') {
         roomTotal *= (1 - selectedPromotion.giaTriKhuyenMai / 100);
-      } else if (selectedPromotion.kieuKhuyenMai === 'Giảm giá trực tiếp') {
+      } else if (selectedPromotion.tenKieuKhuyenMai === 'Giảm giá trực tiếp') {
         roomTotal -= selectedPromotion.giaTriKhuyenMai;
       }
-      console.log('After Promotion:', { roomTotal, discountType: selectedPromotion.kieuKhuyenMai, discountValue: selectedPromotion.giaTriKhuyenMai });
+      console.log('After Promotion:', { roomTotal, discountType: selectedPromotion.tenKieuKhuyenMai, discountValue: selectedPromotion.giaTriKhuyenMai });
     }
 
     const total = Math.max(0, roomTotal + serviceTotal);

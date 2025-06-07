@@ -1,6 +1,6 @@
-export async function getCustomerId(cccd, retries = 10, delay = 1000) {
+export async function getCustomerId(cccd, retries = 1, delay = 100) {
   let page = 1;
-  const pageSize = 100;
+  const pageSize = 70;
   let allMatchingCustomers = [];
 
   for (let i = 0; i < retries; i++) {
@@ -37,8 +37,6 @@ export async function getCustomerId(cccd, retries = 10, delay = 1000) {
         }
         page++;
       }
-
-      // Nếu không tìm thấy khách hàng nào khớp với cccd, thử lại
       if (allMatchingCustomers.length === 0) {
         console.warn(`No matching customers found with cccd ${cccd} on attempt ${i + 1}, retrying...`);
         await new Promise((resolve) => setTimeout(resolve, delay));

@@ -20,12 +20,12 @@ const useBookingLogic = ({
   const calculateBookingTotal = useCallback((booking) => {
     const serviceTotal = booking?.services?.reduce((total, item) => total + (item?.gia || 0), 0) || 0;
     let roomTotal = (booking?.room?.giaPhong || 0) * (booking?.numberOfNights || 1);
-    const kieuKhuyenMai = booking?.promotion?.kieuKhuyenMai || 'Phần trăm';
+    const tenKieuKhuyenMai = booking?.promotion?.tenKieuKhuyenMai || 'Phần trăm';
     const giaTriKhuyenMai = booking?.promotion?.giaTriKhuyenMai || 0;
 
-    if (kieuKhuyenMai === 'Phần trăm') {
+    if (tenKieuKhuyenMai === 'Phần trăm') {
       roomTotal *= (1 - giaTriKhuyenMai / 100);
-    } else if (kieuKhuyenMai === 'Giảm giá trực tiếp') {
+    } else if (tenKieuKhuyenMai === 'Giảm giá trực tiếp') {
       roomTotal -= giaTriKhuyenMai || 0;
     }
 

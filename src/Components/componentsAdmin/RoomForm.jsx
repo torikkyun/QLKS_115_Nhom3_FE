@@ -58,7 +58,7 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
           <InputNumber min={1} className="w-full" />
         </Form.Item>
         <Form.Item
-          name="tinhTrangPhong"
+          name="tenTinhTrang"
           label="Trạng Thái"
           rules={[{ required: true, message: 'Vui lòng chọn trạng thái' }]}
         >

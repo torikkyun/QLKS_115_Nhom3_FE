@@ -13,16 +13,35 @@ export async function getBooking(page = 1, pageSize = 10) {
             throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
         }
 
-        const data = await response.json();
-        console.log('Raw API Response (getBooking):', data);
+        const apiResponse = await response.json();
+        console.log('Raw API Response (getBooking):', apiResponse);
 
-        // Đảm bảo phản hồi có cấu trúc đầy đủ
+        let dataArray = [];
+        let totalRecords = 0;
+        let currentPage = page;
+        let current_pageSize = pageSize;
+        let totalPages = 1;
+
+        if (Array.isArray(apiResponse.data)) { // Trường hợp phản hồi có cấu trúc phân trang
+            dataArray = apiResponse.data;
+            totalRecords = apiResponse.totalRecords || apiResponse.data.length || 0;
+            currentPage = apiResponse.page || page;
+            current_pageSize = apiResponse.pageSize || pageSize;
+            totalPages = apiResponse.totalPages || Math.ceil(totalRecords / current_pageSize) || 1;
+        } else if (Array.isArray(apiResponse)) { // Trường hợp phản hồi trực tiếp là một mảng
+            dataArray = apiResponse;
+            totalRecords = apiResponse.length;
+            totalPages = Math.ceil(totalRecords / pageSize) || 1; // Ước tính totalPages dựa trên pageSize client
+        } else {
+            console.warn('Cấu trúc phản hồi API không hợp lệ:', apiResponse); // Có thể xử lý lỗi hoặc trả về một cấu trúc rỗng nếu phản hồi không đúng định dạng
+        }
+
         const result = {
-            data: Array.isArray(data.data) ? data.data : [],
-            totalRecords: data.totalRecords || data.data?.length || 0,
-            page: data.page || page,
-            pageSize: data.pageSize || pageSize,
-            totalPages: data.totalPages || Math.ceil((data.totalRecords || data.data?.length || 0) / (data.pageSize || pageSize)) || 1,
+            data: dataArray,
+            totalRecords: totalRecords,
+            page: currentPage,
+            pageSize: current_pageSize,
+            totalPages: totalPages,
         };
 
         return result;
@@ -31,28 +50,21 @@ export async function getBooking(page = 1, pageSize = 10) {
         throw error; // Ném lỗi để xử lý ở component
     }
 }
-export async function addBooking() {
-    const booking = [{
-        phongDichVus: [
-            {
-                maPhong: 0,
-                dichVuIds: [0],
-                ngayNhanPhong: "2025-05-29",
-                ngayTraPhong: "2025-05-29"
-            }
-        ],
-        khuyenMaiId: 0,
-        ghiChu: "string",
-        maKhachHang: 0,
-    }];
+
+
+export async function addBooking(bookingData) {
     try {
+        if (!Array.isArray(bookingData) || bookingData.length === 0) {
+            throw new Error('Dữ liệu đặt phòng không hợp lệ. Phải là một mảng không rỗng.');
+        }
+
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/DatTraPhong/dat-phong`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(booking),
+            body: JSON.stringify(bookingData), // Sử dụng dữ liệu truyền vào
         });
 
         if (!response.ok) {
@@ -61,26 +73,30 @@ export async function addBooking() {
         }
 
         const data = await response.json();
-        return data.data;
+        return data.data; // Giả định API trả về dữ liệu trong data.data
     } catch (error) {
-        console.error('Lỗi khi thêm khách hàng:', error.message);
+        console.error('Lỗi khi thêm đặt phòng:', error.message);
         throw error; // Ném lỗi để xử lý ở component
     }
 }
 
-export async function updateBooking() {
-    const booking = {
-        maPhong: 0,
-        maKhachHang: 0
-    };
+
+export async function updateBooking(maKhachHang, updateData) {
     try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/DatTraPhong/tra-phong/${booking.maKhachHang}`, {
+        if (typeof maKhachHang !== 'number' || maKhachHang <= 0) {
+            throw new Error('Mã khách hàng không hợp lệ để cập nhật.');
+        }
+        if (!updateData || typeof updateData !== 'object') {
+            throw new Error('Dữ liệu cập nhật không hợp lệ.');
+        }
+
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/DatTraPhong/tra-phong/${maKhachHang}`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(booking),
+            body: JSON.stringify(updateData), // Sử dụng dữ liệu cập nhật truyền vào
         });
 
         if (!response.ok) {
@@ -91,7 +107,7 @@ export async function updateBooking() {
         const data = await response.json();
         return data.data; // Giả định API trả về phòng vừa cập nhật trong data.data
     } catch (error) {
-        console.error('Lỗi khi cập nhật danh sách:', error.message);
+        console.error('Lỗi khi cập nhật danh sách (trả phòng):', error.message);
         throw error; // Ném lỗi để xử lý ở component
     }
 }

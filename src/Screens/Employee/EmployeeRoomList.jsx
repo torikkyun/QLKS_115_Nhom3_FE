@@ -58,7 +58,7 @@ const EmployeeRoomList = () => {
     const filteredRooms = rooms.filter((room) => {
         const searchText = filters.search.toLowerCase();
         const matchesSearch =
-            (room.soPhong || '').toLowerCase().includes(searchText)
+            (room.soPhong || '').toLowerCase().includes(searchText);
         const matchesStatus = filters.status === '' || (room.tenTinhTrang !== undefined && room.tenTinhTrang.toString() === filters.status);
         const matchesType = filters.type === '' || (room.ghiChu !== undefined && room.ghiChu.toString() === filters.type);
         return matchesSearch && matchesStatus && matchesType;

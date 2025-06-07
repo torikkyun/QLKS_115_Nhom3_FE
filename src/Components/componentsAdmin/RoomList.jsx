@@ -10,14 +10,15 @@ const RoomList = ({ rooms, onEdit, onDelete }) => {
     { title: 'Số Giường', dataIndex: 'soGiuong', key: 'soGiuong' },
     {
       title: 'Trạng Thái',
-      dataIndex: 'tinhTrangPhong',
-      key: 'tinhTrangPhong',
+      dataIndex: 'tenTinhTrang',
+      key: 'tenTinhTrang',
       render: (status) => (
         <span className={status === 0 ? 'text-green-600' : 'text-red-600'}>
           {status === 0 ? 'Trống' : 'Đã sử dụng'}
         </span>
       ),
     },
+    { title: 'Giá Phòng', dataIndex: 'giaPhong', key: 'giaPhong' },
     {
       title: 'Hành Động',
       key: 'action',

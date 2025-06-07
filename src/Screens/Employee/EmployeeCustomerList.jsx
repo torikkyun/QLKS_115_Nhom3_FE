@@ -5,7 +5,7 @@ import EmployeeCustomerTable from '../../Components/componentsEmployee/EmployeeC
 import EmployeeCustomerFilter from '../../Components/componentsEmployee/EmployeeCustomerFilter'
 import EmployeeCustomerForm from '../../Components/componentsEmployee/EmployeeCustomerForm'
 import CustomerDeleteConfirm from '../../Components/componentsEmployee/CustomerDeleteConfirmModal';
-import { getCustomers, addCustomers, updateCustomers, deleteCustomers } from '../../apis/apicustomer';
+import { getCustomers, addCustomers, updateCustomers, deleteCustomers } from '../../apis/apirestcustomer';
 import EmployeeSideBar from '../../Components/componentsEmployee/EmployeeSideBar';
 import EmployeeHeader from '../../Components/componentsEmployee/EmployeeHeader';
 

@@ -1,11 +1,20 @@
 import React from "react";
 
-const EmployeeBookingCard = ({ booking }) => {
+const EmployeeBookingCard = ({ booking, onCheckout }) => {
   // Hàm định dạng ngày tháng
   const formatDate = (dateString) => {
     if (!dateString) return "Chưa có dữ liệu";
     const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString("vi-VN", options);
+  };
+
+  // Hàm xử lý sự kiện khi nút "Trả Phòng" được nhấn
+  const handleCheckoutClick = () => {
+    if (onCheckout) {
+      onCheckout(booking.maDatPhong);
+    } else {
+      console.warn("Hàm onCheckout chưa được cung cấp cho card này.");
+    }
   };
 
   // Kiểm tra nếu không có dữ liệu đặt phòng, hiển thị thông báo.
@@ -16,7 +25,13 @@ const EmployeeBookingCard = ({ booking }) => {
   return (
     <div className="bg-white rounded-xl shadow-lg p-6 mb-6 transform transition-transform hover:scale-105 duration-300 ease-in-out">
       {/* Nút Trả Phòng */}
-      
+      <button
+        onClick={handleCheckoutClick}
+        className="absolute top-4 right-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300 ease-in-out transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75"
+        aria-label="Trả phòng"
+      >
+        Trả Phòng
+      </button>
       <div className="border-b pb-4 mb-4">
         <h3 className="text-2xl font-bold text-blue-700">
           Thông tin đặt phòng #{booking.maDatPhong}

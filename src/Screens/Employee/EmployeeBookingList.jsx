@@ -114,7 +114,7 @@ const EmployeeBookingList = () => {
             onClick={handleAddBooking}
             className="mb-4 bg-blue-500 hover:bg-blue-600 border-none"
           >
-            Thêm danh sách
+            Đặt Phòng
           </Button>
 
           <EmployeeBookingFilter onFilterChange={handleFilterChange} />

@@ -16,6 +16,7 @@ import {
   faPhone,
   faEnvelope,
   faGlobe,
+  faFileInvoice
 } from '@fortawesome/free-solid-svg-icons';
 import logo from '../../assets/Image/logo.png';
 
@@ -28,7 +29,6 @@ const Header = () => {
   const bookings = useSelector(state => state.cart.bookings);
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchVisible, setSearchVisible] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(i18n.language || 'vi');
 
   useEffect(() => {
@@ -51,22 +51,17 @@ const Header = () => {
       label: t('profile'),
       onClick: () => navigate('/user/profile'),
     },
+    
     {
-      key: 'history',
-      icon: <FontAwesomeIcon icon={faHistory} className="text-blue-500" />,
-      label: t('booking_history'),
-      onClick: () => navigate('/user/booking-history'),
+      key: 'invoice_search',
+      icon: <FontAwesomeIcon icon={faFileInvoice} className="text-blue-500" />,
+      label: t('search_invoice', { defaultValue: 'Tra Cứu Hóa Đơn' }),
+      onClick: () => navigate('/user/lookupinvoice'),
     },
-
     {
       type: 'divider',
     },
-    {
-      key: 'settings',
-      icon: <FontAwesomeIcon icon={faCog} className="text-blue-500" />,
-      label: t('settings'),
-      onClick: () => navigate('/user/settings'),
-    },
+    
     {
       key: 'logout',
       icon: <FontAwesomeIcon icon={faSignOutAlt} className="text-blue-500" />,
@@ -103,7 +98,6 @@ const Header = () => {
     { path: '/user/rooms', label: t('rooms') },
     { path: '/user/aboutus', label: t('about') },
   ];
-
 
   return (
     <>
@@ -148,14 +142,19 @@ const Header = () => {
               className="h-10 w-auto cursor-pointer hover:scale-105 transition-transform"
               onClick={() => navigate('/user/home')}
             />
-            <div className="">
+            <div>
               <h1
                 onClick={() => navigate('/user/home')}
-                className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform">
+                className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform"
+              >
                 {t('hotel_name')}
               </h1>
-              <p className="text-xs text-gray-400 cursor-pointer hover:scale-105 transition-transform"
-                onClick={() => navigate('/user/home')}>{t('slogan')}</p>
+              <p
+                onClick={() => navigate('/user/home')}
+                className="text-xs text-gray-400 cursor-pointer hover:scale-105 transition-transform"
+              >
+                {t('slogan')}
+              </p>
             </div>
           </div>
 
@@ -182,28 +181,22 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center gap-2">
-
-
             <Dropdown menu={{ items: languageItems }} placement="bottomRight" className="hidden md:block">
               <Button type="link" className="flex items-center gap-2 text-white hover:text-blue-500">
-
-                <FontAwesomeIcon icon={faGlobe}
+                <FontAwesomeIcon
+                  icon={faGlobe}
                   className="text-white hover:text-blue-500 text-lg"
-                  onClick={() => setLanguageVisible(true)}
-                >
-
-                </FontAwesomeIcon>
+                />
                 {currentLanguage === 'vi' ? '🇻🇳' : '🇺🇸'}
-
               </Button>
-
             </Dropdown>
 
             <Badge count={bookings.length} offset={[10, 0]}>
               <FontAwesomeIcon
                 icon={faCartShopping}
-                className="text-white text-lg cursor-pointer hover:text-blue-400 hover:bg-blu rounded-lg p-2 transition-colors"
-                onClick={() => navigate('/user/CartPage')} />
+                className="text-white text-lg cursor-pointer hover:text-blue-400 rounded-lg p-2 transition-colors"
+                onClick={() => navigate('/user/CartPage')}
+              />
             </Badge>
 
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight" className="hidden md:block">
@@ -211,16 +204,15 @@ const Header = () => {
                 <Avatar
                   size="small"
                   icon={<FontAwesomeIcon icon={faUser} className="text-white-500" />}
-                // className="bg-gradient-to-r from-blue-500 to-purple-500"
                 />
-                {/* <span className="text-sm hidden lg:block">{t('greeting')}</span> */}
               </div>
             </Dropdown>
 
-            <FontAwesomeIcon icon={faBars}
+            <FontAwesomeIcon
+              icon={faBars}
               onClick={() => setMobileMenuOpen(true)}
-              className="text-white hover:text-blue-500 text-lg cursor-pointer" />
-
+              className="text-white hover:text-blue-500 text-lg cursor-pointer"
+            />
           </div>
         </div>
 
@@ -240,7 +232,6 @@ const Header = () => {
         className="lg:hidden"
       >
         <div className="space-y-4">
-          {/* <Search placeholder={t('search_placeholder')} onSearch={handleSearch} className="mb-4" /> */}
           <nav className="space-y-2">
             {navItems.map((item) => (
               <NavLink

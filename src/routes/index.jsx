@@ -16,6 +16,8 @@ import AboutUsPage from "../Screens/Customers/AboutUsPage";
 import InvoicePage from "../Screens/Customers/InvoicePage";
 import RoomsPage from "../Screens/Customers/RoomsPage";
 
+import LookupInvoicePage from "../Screens/Customers/LookupInvoicePage";
+
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -80,6 +82,10 @@ export const router = createBrowserRouter([
     {
         path: "user/rooms",
         element: <RoomsPage />,
+    },
+    {
+        path: "/user/lookupinvoice",
+        element: <LookupInvoicePage />,
     }
 
 

@@ -92,3 +92,34 @@ export async function payInvoice(maDatPhong) {
         throw error;
     }
 }
+export async function getInvoiceByIdPublic(id) {
+    try {
+        if (!id || isNaN(Number(id))) {
+            throw new Error('Mã đặt phòng không hợp lệ');
+        }
+
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/HoaDon/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log('Raw API Response (getInvoiceByIdPublic):', data);
+
+        if (!data || Object.keys(data).length === 0) {
+            throw new Error('Không tìm thấy hóa đơn với mã đặt phòng này');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Lỗi khi lấy thông tin hóa đơn công khai:', error.message);
+        throw error;
+    }
+}

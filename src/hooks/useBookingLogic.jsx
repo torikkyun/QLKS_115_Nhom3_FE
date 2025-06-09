@@ -1,6 +1,6 @@
 // useBookingLogic.jsx
 import { useCallback } from 'react';
-import { message } from 'antd'; // Import message từ antd
+import { message } from 'antd';
 import { bookRoom } from '../apis/apiroom';
 import { createCustomer } from '../apis/apicustomer';
 import { payInvoice } from '../apis/apiinvoice';
@@ -40,8 +40,8 @@ const useBookingLogic = ({
     if (!promotion) {
       return t('no_promotion', { defaultValue: 'Không áp dụng khuyến mãi' });
     }
-    const { tenKhuyenMai, maKhuyenMai, kieuKhuyenMai, giaTriKhuyenMai } = promotion;
-    const discountText = kieuKhuyenMai === 'Phần trăm'
+    const { tenKhuyenMai, maKhuyenMai,tenKieuKhuyenMai, giaTriKhuyenMai } = promotion;
+    const discountText = tenKieuKhuyenMai === 'Phần trăm'
       ? `(-${giaTriKhuyenMai}%)`
       : `(-${giaTriKhuyenMai.toLocaleString()} VND)`;
     return `${tenKhuyenMai} (ID: ${maKhuyenMai}) ${discountText}`;
@@ -154,10 +154,16 @@ const useBookingLogic = ({
         const response = await bookRoom(bookingData);
         console.log('Booking response:', response);
 
-        const maDatPhong = response?.maDatPhong || response?.data?.maDatPhong;
+        // Xử lý trường hợp response là mảng (nhiều booking)
+        let maDatPhong;
+        if (Array.isArray(response)) {
+          maDatPhong = response[0]?.maDatPhong; // Lấy maDatPhong từ booking đầu tiên
+        } else {
+          maDatPhong = response?.maDatPhong || response?.data?.maDatPhong;
+        }
         console.log('Extracted maDatPhong:', maDatPhong);
         if (!maDatPhong) {
-          console.log('No booking ID returned, but request was successful');
+          console.log('No booking ID returned, but request was successful');   
           message.success(t('booking_success', { defaultValue: 'Đặt phòng thành công!' }));
           navigate('/user/home');
           return;
@@ -165,7 +171,8 @@ const useBookingLogic = ({
 
         console.log('Calling payment API with maDatPhong:', maDatPhong);
         const hoaDon = await payInvoice(maDatPhong);
-        console.log('Payment response:', hoaDon); 
+        
+
         message.success(
           t('booking_and_payment_success', {
             defaultValue: `Đặt phòng và thanh toán thành công! Mã đặt phòng: ${maDatPhong}`,

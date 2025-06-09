@@ -1,3 +1,46 @@
+import React from "react";
+import EmployeeBookingCard from "./EmployeeBookingCard"; // Import the card component
+
+/**
+ * Container component to display a list of bookings.
+ * This component now receives the list and action handlers as props.
+ * @param {object} props - The component props.
+ * @param {Array<object>} props.bookings - An array of booking objects to display.
+ * @param {function} props.onCheckout - Callback function for checkout action.
+ * @param {function} props.onEdit - Callback function for edit action.
+ */
+const BookingListContainer = ({ bookings, onCheckout, onEdit }) => {
+  // If there are no bookings, display a message.
+  if (!bookings || bookings.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-full bg-gray-100">
+        <p className="text-xl text-yellow-700 font-semibold">Không có dữ liệu đặt phòng nào.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto p-4 bg-gray-100"> {/* Removed min-h-screen as parent handles height */}
+      {/* Grid layout for booking cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
+        {bookings.map((bookingItem) => (
+          // Render EmployeeBookingCard for each booking item
+          <EmployeeBookingCard
+            key={bookingItem.maDatPhong} // Unique key for list rendering optimization
+            booking={bookingItem}
+            onCheckout={onCheckout} // Pass the checkout handler down to the card
+            onEdit={onEdit} // Pass the edit handler down to the card
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default BookingListContainer;
+
+
+/*
 import React, { useState, useEffect } from "react";
 import EmployeeBookingCard from "./EmployeeBookingCard";
 import { getBooking, updateBooking } from "../../apis/apibooking"; 
@@ -114,3 +157,4 @@ const BookingListContainer = () => {
 };
 
 export default BookingListContainer;
+*/

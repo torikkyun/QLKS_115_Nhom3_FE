@@ -17,7 +17,7 @@ const EmployeeBookingFilter = ({ onFilterChange }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
       <Input
-        placeholder="Tìm theo mã phòng hoặc mã khách hàng"
+        placeholder="Tìm theo mã phòng, mã KH, tên KH, NV"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="w-full"

@@ -133,7 +133,7 @@ const EmployeeCustomerList = () => {
                         total={pagination.totalRecords}
                         onChange={(page, pageSize) => setPagination({ ...pagination, page, pageSize })}
                         showSizeChanger
-                        pageSizeOptions={['10', '20', '50']}
+                        pageSizeOptions={['10', '20', '50', '70']}
                         className="mt-4 flex justify-end"
                     />
                     <EmployeeCustomerForm

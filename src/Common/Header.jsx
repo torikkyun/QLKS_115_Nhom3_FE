@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { ExceptionMap } from 'antd/es/result';
+import ProfilePutModal from '../Components/componentsAdmin/ProfilePutModal';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -36,7 +37,7 @@ const Header = () => {
 
   const menu = (
     <Menu>
-      <Menu.Item key="profile" icon={<UserOutlined />}>
+      <Menu.Item key="profile" icon={<UserOutlined />} onClick={() => setIsProfileModalOpen(true)}>
         Hồ sơ
       </Menu.Item>
       <Menu.Item key="settings" icon={<SettingOutlined />}>
@@ -47,6 +48,8 @@ const Header = () => {
       </Menu.Item>
     </Menu>
   );
+
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   return (
     <div className="bg-blue-900 shadow-md p-4">
@@ -89,6 +92,17 @@ const Header = () => {
           )}
         </Col>
       </Row >
+      <ProfilePutModal
+  isOpen={isProfileModalOpen}
+  onClose={() => setIsProfileModalOpen(false)}
+  onSave={(updatedData) => {
+    // Cập nhật lại user trong localStorage nếu cần
+    const user = { ...JSON.parse(localStorage.getItem('user')), ...updatedData };
+    localStorage.setItem('user', JSON.stringify(user));
+    setUser(user);
+    setIsProfileModalOpen(false);
+  }}
+/>
     </div >
   );
 };

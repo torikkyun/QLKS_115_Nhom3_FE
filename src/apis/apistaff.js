@@ -133,3 +133,29 @@ export async function deleteStaff(maNhanVien) {
     throw error;
   }
 }
+
+export async function getStaffById(maNhanVien) {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('Token không tồn tại');
+
+    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/NhanVien/${maNhanVien}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      throw new Error(errorData || `HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Lỗi khi lấy thông tin nhân viên:', error.message);
+    throw error;
+  }
+}

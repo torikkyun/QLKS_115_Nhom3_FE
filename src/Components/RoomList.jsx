@@ -3,14 +3,15 @@ import RoomCard from './RoomCard';
 
 const RoomList = ({ filteredRooms, onBookRoom }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="bg-gray min-h-[700px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {filteredRooms.length > 0 ? (
-        filteredRooms.map((room) => (
+        filteredRooms.map((room, index) => (
           <RoomCard
-            className="pb-4"
             key={room.maPhong}
-            room={room} // Truyền toàn bộ object room
+            room={room}
             onBookRoom={onBookRoom}
+            index={index}
+            className="pb-4"
           />
         ))
       ) : (

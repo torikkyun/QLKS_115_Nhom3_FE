@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, Button,Popconfirm,Space } from 'antd';
+import { Table, Button, Popconfirm, Space } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const RoomList = ({ rooms, onEdit, onDelete }) => {
@@ -10,12 +10,12 @@ const RoomList = ({ rooms, onEdit, onDelete }) => {
     { title: 'Số Giường', dataIndex: 'soGiuong', key: 'soGiuong' },
     { title: 'Giá Phòng', dataIndex: 'giaPhong', key: 'giaPhong' },
     {
-      title: 'Trạng Thái',
-      dataIndex: 'tinhTrangPhong',
-      key: 'tinhTrangPhong',
+      title: 'Tình Trạng',
+      dataIndex: 'tenTinhTrang',
+      key: 'tenTinhTrang',
       render: (status) => (
-        <span className={status === 0 ? 'text-green-600' : 'text-red-600'}>
-          {status === 0 ? 'Trống' : 'Đã sử dụng'}
+        <span className={status === 'Trống' ? 'text-green-600' : 'text-red-600'}>
+          {status === 'Trống' ? 'Trống' : 'Đã sử dụng'}
         </span>
       ),
     },

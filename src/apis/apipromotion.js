@@ -14,19 +14,17 @@ export async function fetchPromotions(page = 1, pageSize = 10) {
     }
 
     const data = await response.json();
-    return data.data.map(promo => ({
-      maKhuyenMai: promo.maKhuyenMai,
-      tenKhuyenMai: promo.tenKhuyenMai,
-      moTaKhuyenMai: promo.moTaKhuyenMai,
-      ngayBatDau: promo.ngayBatDau,
-      ngayKetThuc: promo.ngayKetThuc,
-      giaTriKhuyenMai: promo.giaTriKhuyenMai,
-      ghiChu: promo.ghiChu,
-      kieuKhuyenMai: promo.tenKieuKhuyenMai,
-    })) || [];
+    console.log('Raw API Response (fetchPromotions):', data);
+    return {
+      data: data.data || [],
+      totalRecords: data.totalRecords || data.data?.length || 0,
+      page: data.page || page,
+      pageSize: data.pageSize || pageSize,
+      totalPages: data.totalPages || Math.ceil((data.totalRecords || data.data?.length || 0) / (data.pageSize || pageSize)) || 1,
+    };
   } catch (error) {
     console.error('Lỗi khi lấy danh sách khuyến mãi:', error.message);
-    return [];
+    throw error;
   }
 }
 
@@ -45,20 +43,11 @@ export async function getPromotionById(id) {
       throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
     }
 
-    const promo = await response.json();
-    return {
-      maKhuyenMai: promo.maKhuyenMai,
-      tenKhuyenMai: promo.tenKhuyenMai,
-      moTaKhuyenMai: promo.moTaKhuyenMai,
-      ngayBatDau: promo.ngayBatDau,
-      ngayKetThuc: promo.ngayKetThuc,
-      giaTriKhuyenMai: promo.giaTriKhuyenMai,
-      ghiChu: promo.ghiChu,
-      kieuKhuyenMai: promo.tenKieuKhuyenMai || promo.kieuKhuyenMai,
-    };
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error(`Lỗi khi lấy khuyến mãi với ID ${id}:`, error.message);
-    return null;
+    throw error;
   }
 }
 
@@ -78,13 +67,10 @@ export async function fetchPromotionTypes() {
     }
 
     const data = await response.json();
-    return data.data.map(type => ({
-      id: type.id,
-      tenKieuKhuyenMai: type.tenKieuKhuyenMai,
-    })) || [];
+    return data.data || [];
   } catch (error) {
     console.error('Lỗi khi lấy danh sách kiểu khuyến mãi:', error.message);
-    return [];
+    throw error;
   }
 }
 
@@ -105,12 +91,10 @@ export async function createPromotion(promotion) {
       moTaKhuyenMai: promotion.moTaKhuyenMai,
       ngayBatDau: promotion.ngayBatDau,
       ngayKetThuc: promotion.ngayKetThuc,
-      giaTriKhuyenMai: parseFloat(promotion.giaTriKhuyenMai),
       kieuKhuyenMai: kieuKhuyenMaiByte,
+      giaTriKhuyenMai: parseFloat(promotion.giaTriKhuyenMai),
       ghiChu: promotion.ghiChu || '',
     };
-
-    console.log('Dữ liệu gửi lên API:', payload);
 
     const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/KhuyenMai`, {
       method: 'POST',
@@ -122,33 +106,14 @@ export async function createPromotion(promotion) {
     });
 
     if (!response.ok) {
-      let errorData;
-      try {
-        errorData = await response.json(); // Thử parse JSON
-        console.error('Chi tiết lỗi từ API:', JSON.stringify(errorData, null, 2));
-      } catch (jsonError) {
-        // Nếu parse JSON thất bại, ghi log nội dung thô của phản hồi
-        const errorText = await response.text();
-        console.error('Không thể parse JSON từ phản hồi. Nội dung phản hồi:', errorText);
-        throw new Error(`HTTP error! Status: ${response.status}, Response: ${errorText || 'Không có nội dung phản hồi'}`);
-      }
+      const errorData = await response.json();
       throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
     }
 
-    const promo = await response.json();
-    return {
-      maKhuyenMai: promo.maKhuyenMai,
-      tenKhuyenMai: promo.tenKhuyenMai,
-      moTaKhuyenMai: promo.moTaKhuyenMai,
-      ngayBatDau: promo.ngayBatDau,
-      ngayKetThuc: promo.ngayKetThuc,
-      giaTriKhuyenMai: promo.giaTriKhuyenMai,
-      ghiChu: promo.ghiChu,
-      kieuKhuyenMai: promo.tenKieuKhuyenMai || promo.kieuKhuyenMai,
-    };
+    return await response.json();
   } catch (error) {
     console.error('Lỗi khi tạo khuyến mãi:', error.message);
-    return null;
+    throw error;
   }
 }
 
@@ -159,8 +124,8 @@ export async function updatePromotion(id, promotion) {
       moTaKhuyenMai: promotion.moTaKhuyenMai,
       ngayBatDau: promotion.ngayBatDau,
       ngayKetThuc: promotion.ngayKetThuc,
-      giaTriKhuyenMai: parseFloat(promotion.giaTriKhuyenMai),
       kieuKhuyenMai: parseInt(promotion.kieuKhuyenMai),
+      giaTriKhuyenMai: parseFloat(promotion.giaTriKhuyenMai),
       ghiChu: promotion.ghiChu,
     };
 
@@ -178,20 +143,10 @@ export async function updatePromotion(id, promotion) {
       throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
     }
 
-    const promo = await response.json();
-    return {
-      maKhuyenMai: promo.maKhuyenMai,
-      tenKhuyenMai: promo.tenKhuyenMai,
-      moTaKhuyenMai: promo.moTaKhuyenMai,
-      ngayBatDau: promo.ngayBatDau,
-      ngayKetThuc: promo.ngayKetThuc,
-      giaTriKhuyenMai: promo.giaTriKhuyenMai,
-      ghiChu: promo.ghiChu,
-      kieuKhuyenMai: promo.tenKieuKhuyenMai || promo.kieuKhuyenMai,
-    };
+    return await response.json();
   } catch (error) {
     console.error(`Lỗi khi cập nhật khuyến mãi với ID ${id}:`, error.message);
-    return null;
+    throw error;
   }
 }
 
@@ -213,6 +168,6 @@ export async function deletePromotion(id) {
     return true;
   } catch (error) {
     console.error(`Lỗi khi xóa khuyến mãi với ID ${id}:`, error.message);
-    return false;
+    throw error;
   }
 }

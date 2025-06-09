@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import Button from "../Button";
 import { promotions } from "../../Mock/mockData";
 
+
+
 const FilterPanel = ({
   minPrice,
   maxPrice,
@@ -14,16 +16,14 @@ const FilterPanel = ({
   onMaxPriceChange,
   onRoomTypeChange,
   onResetFilter,
-  promotionOptions = promotions.map(promo => promo.TenKhuyenMai),
-  selectedPromotions = [],
-  onPromotionChange,
+  
 }) => {
   const trackWidth = ((maxPrice - minPrice) / (maxPriceLimit - minPriceLimit)) * 100;
   const trackLeft = ((minPrice - minPriceLimit) / (maxPriceLimit - minPriceLimit)) * 100;
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-md">
-      <h2 className="text-lg font-semibold mb-4">Lọc theo giá, loại phòng và khuyến mãi</h2>
+      <h2 className="text-lg font-semibold mb-4">Lọc theo giá</h2>
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-2">

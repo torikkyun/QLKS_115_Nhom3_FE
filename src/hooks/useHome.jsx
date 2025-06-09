@@ -23,7 +23,7 @@ const useHome = () => {
         setLoading(true);
         let allRooms = [];
         let page = 1;
-        const pageSize = 10; // Giả định pageSize mặc định từ API
+        const pageSize = 10;
         let hasMore = true;
 
         while (hasMore) {
@@ -38,13 +38,18 @@ const useHome = () => {
               page++;
             }
           } else {
-            console.warn('Dữ liệu từ API không hợp lệ:', roomsData);
+            console.warn("Dữ liệu từ API không hợp lệ:", roomsData);
             hasMore = false;
           }
         }
 
-        setRooms(allRooms);
-        setFilteredRooms(allRooms);
+        // Đảm bảo giaPhong là số và có giá trị hợp lệ
+        const validRooms = allRooms.map((room) => ({
+          ...room,
+          giaPhong: room.giaPhong || 0, // Giá mặc định là 0 nếu undefined
+        }));
+        setRooms(validRooms);
+        setFilteredRooms(validRooms);
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -55,14 +60,15 @@ const useHome = () => {
   }, []);
 
   const handleSearch = (searchData) => {
-    const { roomName = "", roomType = "", minPrice, maxPrice, roomTypes = [] } = searchData;
+    const { roomName = "", roomType = "", minPrice: searchMinPrice, maxPrice: searchMaxPrice, roomTypes = [] } = searchData;
     const filtered = (Array.isArray(rooms) ? rooms : []).filter((room) => {
       const matchesRoomName = roomName
         ? room.soPhong.toLowerCase().includes(roomName.toLowerCase())
         : true;
       const matchesRoomType = roomType ? room.ghiChu === roomType : true;
       const matchesRoomTypes = roomTypes.length > 0 ? roomTypes.includes(room.ghiChu) : true;
-      return matchesRoomName && matchesRoomType && matchesRoomTypes;
+      const matchesPrice = room.giaPhong >= searchMinPrice && room.giaPhong <= searchMaxPrice;
+      return matchesRoomName && matchesRoomType && matchesRoomTypes && matchesPrice;
     });
     setFilteredRooms(filtered);
   };

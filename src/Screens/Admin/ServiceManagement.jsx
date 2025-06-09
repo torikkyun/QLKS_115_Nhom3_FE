@@ -104,7 +104,7 @@ const ServiceManagement = () => {
             <SideBar />
             <div className="flex flex-col flex-1">
                 <Header />
-                <div className="flex-1 p-6 bg-gray-100 min-h-screen">
+                <div className="flex-1 p-6 bg-gray-100 overflow-y-auto">
                     <h1 className="text-2xl font-bold mb-4">Quản Lý Dịch Vụ</h1>
                     <Button
                         type="primary"
@@ -131,7 +131,7 @@ const ServiceManagement = () => {
                         onChange={(page, pageSize) => setPagination({ ...pagination, page, pageSize })}
                         showSizeChanger
                         pageSizeOptions={['10', '20', '50']}
-                        className="mt-4"
+                        className="mt-4 flex justify-end"
                         style={{ textAlign: 'right' }}
                     />
                     <ServiceForm

@@ -53,7 +53,15 @@ const ServiceForm = ({ visible, onCancel, onSave, service }) => {
                 >
                     <Select>
                         <Option value={1}>Dịch vụ phòng</Option>
-                        {/* Thêm các loại dịch vụ khác nếu cần */}
+                        <Option value={2}>Dịch vụ ăn uống</Option>
+                        <Option value={3}>Dịch vụ giải trí</Option>
+                        <Option value={4}>Dịch vụ giặt ủi</Option>
+                        <Option value={5}>Dịch vụ spa</Option>
+                        <Option value={6}>Dịch vụ khác</Option>
+
+
+
+                        
                     </Select>
                 </Form.Item>
                 <Form.Item

@@ -85,6 +85,12 @@ const Sidebar = () => {
       label: 'Tạo tài khoản',
       path: '/create-account',
     },
+    {
+      key: '6',
+      icon: <AppstoreOutlined />,
+      label: 'Danh sách đặt trả phòng',
+      path: '/room-bookings',
+    },
   ];
 
   return (

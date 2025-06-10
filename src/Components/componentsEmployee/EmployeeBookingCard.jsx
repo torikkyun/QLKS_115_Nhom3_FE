@@ -1,6 +1,6 @@
 import React from "react";
 
-const EmployeeBookingCard = ({ booking, onCheckout, onEdit }) => {
+const EmployeeBookingCard = ({ booking, onCheckout }) => {
   const formatDate = (dateString) => {
     if (!dateString) return "Chưa có dữ liệu";
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -16,14 +16,7 @@ const EmployeeBookingCard = ({ booking, onCheckout, onEdit }) => {
     }
   };
 
-  // Function to handle the edit button click
-  const handleEditClick = () => {
-    if (onEdit) {
-      onEdit(booking);
-    } else {
-      console.warn("Hàm onEdit chưa được cung cấp cho card này.");
-    }
-  };
+
 
   // Display a message if no booking data is provided
   if (!booking) {
@@ -38,14 +31,6 @@ const EmployeeBookingCard = ({ booking, onCheckout, onEdit }) => {
     <div className="relative bg-white rounded-xl shadow-lg p-6 mb-6 transform transition-transform hover:scale-105 duration-300 ease-in-out">
       {/* Action Buttons Container */}
       <div className="absolute top-4 right-4 flex space-x-2">
-        {/* Edit Button */}
-        <button
-          onClick={handleEditClick}
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-          aria-label="Sửa đặt phòng"
-        >
-          Sửa
-        </button>
         {/* Checkout button */}
         <button
           onClick={handleCheckoutClick}
@@ -74,9 +59,9 @@ const EmployeeBookingCard = ({ booking, onCheckout, onEdit }) => {
           <h4 className="text-lg font-semibold text-blue-600 mb-2">
             Chi tiết đặt phòng
           </h4>
-          <div className="flex justify-between items-center py-1">
+          <div className=" items-center py-1">
             <span className="font-medium text-gray-700">Số phòng đặt:</span>
-            <span className="text-blue-800 font-semibold">
+            <span className="ml-2 text-blue-800 font-semibold">
               {booking.soPhongDat}
             </span>
           </div>
@@ -107,9 +92,9 @@ const EmployeeBookingCard = ({ booking, onCheckout, onEdit }) => {
             </div>
           )}
           {booking.ghiChu && (
-            <div className="flex justify-between items-center py-1">
+            <div className="items-center py-1">
               <span className="font-medium text-gray-700">Ghi chú:</span>
-              <span className="text-gray-600 italic">{booking.ghiChu}</span>
+              <span className="ml-2 text-gray-600 italic">{booking.ghiChu}</span>
             </div>
           )}
         </div>

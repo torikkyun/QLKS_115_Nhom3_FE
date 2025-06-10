@@ -10,6 +10,7 @@ import AdminDashBoard from "../Screens/Admin/AdminDashBoard";// import ServiceMa
 import EmployeeCustomerList from "../Screens/Employee/EmployeeCustomerList";
 import EmployeeRoomList from "../Screens/Employee/EmployeeRoomList";
 import EmployeeBookingList from "../Screens/Employee/EmployeeBookingList";
+import AdminBookingList from "../Screens/Admin/AdminBookingList";
 
 export const router = createBrowserRouter([
   {
@@ -53,14 +54,12 @@ export const router = createBrowserRouter([
     element: <EmployeeCustomerList />
   },
   {
+    path: "/admin/room-bookings",
+    element: <AdminBookingList />
+  },
+  {
    path: "/employee/bookings",
    element: <EmployeeBookingList />
   },
-
-  // {
-  //   path: "/admin/room_management/service",
-  //   element: <ServiceManagement />,
-  // }
-
 
 ]);

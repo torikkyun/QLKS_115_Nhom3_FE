@@ -5,10 +5,10 @@ import BookingListContainer from "../../Components/componentsEmployee/BookingLis
 import EmployeeBookingFilter from "../../Components/componentsEmployee/EmployeeBookingFilter";
 import EmployeeCheckoutForm from "../../Components/componentsEmployee/EmployeeCheckoutForm";
 import { getBooking, checkoutBooking } from "../../apis/apibooking";
-import EmployeeSideBar from "../../Components/componentsEmployee/EmployeeSideBar";
-import EmployeeHeader from "../../Components/componentsEmployee/EmployeeHeader";
+import Sidebar from "../../Components/componentsAdmin/SideBar";
+import Header from '../../Common/Header';
 
-const EmployeeBookingList = () => {
+const AdminBookingList = () => {
   const [bookingData, setBookingData] = useState([]); // Dữ liệu đặt phòng hiển thị
   const [loading, setLoading] = useState(false); // Trạng thái tải dữ liệu
   const [error, setError] = useState(null); // Trạng thái lỗi
@@ -167,9 +167,9 @@ const EmployeeBookingList = () => {
 
   return (
     <div className="flex h-screen">
-      <EmployeeSideBar />
+      <Sidebar/>
       <div className="flex flex-col flex-1">
-        <EmployeeHeader />
+        <Header/>
         <div className="flex-1 p-6 bg-gray-100 overflow-auto">
           <h1 className="text-2xl font-bold mb-4">Danh Sách Đặt Phòng</h1>
 
@@ -232,4 +232,4 @@ const EmployeeBookingList = () => {
   );
 };
 
-export default EmployeeBookingList;
+export default AdminBookingList;

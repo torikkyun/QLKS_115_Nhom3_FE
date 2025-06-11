@@ -75,12 +75,6 @@ const Sidebar = () => {
     },
     {
       key: '4',
-      icon: <UnorderedListOutlined />,
-      label: 'Quản lý Đơn Hàng',
-      path: '/bookings',
-    },
-    {
-      key: '5',
       icon: <ShoppingCartOutlined />,
       label: 'Quản lý hóa đơn',
       path: '/admin/bill',

@@ -2,35 +2,32 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Components/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faMoneyBillWave, 
-  faStar, 
-  faCrown, 
-  faBed, 
-  faDollarSign, 
-  faLock, 
-  faEye, 
-  faArrowRight 
+import {
+  faMoneyBillWave,
+  faStar,
+  faCrown,
+  faBed,
+  faDollarSign,
+  faLock,
+  faEye,
+  faArrowRight
 } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 import lowPriceImage from '../assets/Image/GiaThap.jpeg';
 import mediumPriceImage from '../assets/Image/GiaTrungBinh.png';
 import highPriceImage from '../assets/Image/GiaCao.jpg';
 
 const RoomCard = ({ room, onBookRoom, index }) => {
-    if (!room) return <div className="text-center text-gray-500">Không tìm thấy thông tin phòng.</div>;
+    const { t } = useTranslation();
+    if (!room) return <div className="text-center text-gray-500">{t('no_data', { defaultValue: 'Không có dữ liệu' })}</div>;
 
     const navigate = useNavigate();
 
     const isBooked = room.tenTinhTrang === "Đang sử dụng";
-    console.log(`Room ${room.soPhong} - tenTinhTrang: ${room.tenTinhTrang}, isBooked: ${isBooked}`);
 
     const handleViewDetail = (maPhong) => {
-        if (isBooked) {
-            console.log(`Phòng ${maPhong} đã được đặt, không thể xem chi tiết.`);
-            return;
-        }
-        console.log(`Xem chi tiết phòng ${maPhong}`);
+        if (isBooked) return;
         if (onBookRoom) onBookRoom(maPhong);
         navigate(`/user/detailroom/${maPhong}`);
     };
@@ -46,9 +43,9 @@ const RoomCard = ({ room, onBookRoom, index }) => {
     };
 
     const getPriceCategory = (price) => {
-        if (price <= 500000) return { text: 'Tiết kiệm', color: 'bg-emerald-500', icon: faMoneyBillWave };
-        else if (price >= 700000 && price < 1000000) return { text: 'Trung bình', color: 'bg-blue-500', icon: faStar };
-        else return { text: 'Cao cấp', color: 'bg-purple-500', icon: faCrown };
+        if (price <= 500000) return { text: t('room_price_low', { defaultValue: 'Tiết kiệm' }), color: 'bg-emerald-500', icon: faMoneyBillWave };
+        else if (price >= 700000 && price < 1000000) return { text: t('room_price_medium', { defaultValue: 'Trung bình' }), color: 'bg-blue-500', icon: faStar };
+        else return { text: t('room_price_high', { defaultValue: 'Cao cấp' }), color: 'bg-purple-500', icon: faCrown };
     };
 
     const roomImage = room.giaPhong ? getPriceImage(room.giaPhong) : room.anh || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRPjzZo5vrIhhAYMg10uFFk9aoDJ2Z3he7a5g&s';
@@ -76,7 +73,7 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                                 isBooked ? 'grayscale' : 'group-hover:scale-110'
                             }`}
                             src={roomImage}
-                            alt={`Phòng ${room.soPhong}`}
+                            alt={t('room', { defaultValue: 'Phòng' }) + ` ${room.soPhong}`}
                             loading="lazy"
                             onError={handleImageError}
                         />
@@ -89,7 +86,7 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                                     ? 'bg-green-500/90 text-white border-green-400/50 shadow-lg shadow-green-500/25'
                                     : 'bg-red-500/90 text-white border-red-400/50 shadow-lg shadow-red-500/25'
                             }`}>
-                                {room.tenTinhTrang === "Trống" ? " Có sẵn" : " Đã đặt"}
+                                {room.tenTinhTrang === "Trống" ? t('room_available', { defaultValue: 'Có sẵn' }) : t('room_booked', { defaultValue: 'Đã đặt' })}
                             </span>
                         </div>
 
@@ -111,7 +108,7 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                         <div className="flex items-center space-x-2">
                             <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                             <p className="text-sm text-gray-600 font-medium">
-                                {room.ghiChu || 'Phòng tiêu chuẩn'}
+                                {room.ghiChu || t('standard', { defaultValue: 'Phòng tiêu chuẩn' })}
                             </p>
                         </div>
 
@@ -119,21 +116,20 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                             <div className="flex items-center space-x-2 p-2.5 bg-gray-50 rounded-lg">
                                 <FontAwesomeIcon icon={faBed} className="text-lg" />
                                 <div>
-                                    <p className="text-xs text-gray-500">Giường</p>
+                                    <p className="text-xs text-gray-500">{t('bed', { defaultValue: 'Giường' })}</p>
                                     <p className="font-semibold text-gray-800 text-lg">{room.soGiuong}</p>
                                 </div>
                             </div>
                             <div className="flex items-center space-x-2 p-2.5 bg-gray-50 rounded-lg">
                                 <FontAwesomeIcon icon={faDollarSign} className="text-lg" />
                                 <div>
-                                    <p className="text-xs text-gray-500">Giá/đêm</p>
+                                    <p className="text-xs text-gray-500">{t('price', { defaultValue: 'Giá/đêm' })}</p>
                                     <p className="font-semibold text-blue-600">
-                                        {room.giaPhong?.toLocaleString() || 'Liên hệ'}₫
+                                        {room.giaPhong?.toLocaleString() || t('contact', { defaultValue: 'Liên hệ' })}₫
                                     </p>
                                 </div>
                             </div>
                         </div>
-
 
                         <div className={`transition-all duration-300 ${isBooked ? 'opacity-50' : 'opacity-100'}`}>
                             <Button
@@ -151,12 +147,12 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                                 {isBooked ? (
                                     <span className="flex items-center justify-center space-x-2">
                                         <FontAwesomeIcon icon={faLock} />
-                                        <span>Không khả dụng</span>
+                                        <span>{t('not_available', { defaultValue: 'Không khả dụng' })}</span>
                                     </span>
                                 ) : (
                                     <span className="flex items-center justify-center space-x-2 cursor-pointer">
                                         <FontAwesomeIcon icon={faEye} />
-                                        <span>Xem chi tiết</span>
+                                        <span>{t('view_detail', { defaultValue: 'Xem chi tiết' })}</span>
                                         <FontAwesomeIcon icon={faArrowRight} />
                                     </span>
                                 )}
@@ -168,8 +164,6 @@ const RoomCard = ({ room, onBookRoom, index }) => {
                             <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                                 <div className="absolute inset-0 rounded-2xl border-2 border-blue-500/30 animate-pulse"></div>
                             </div>
-                            
-
                             <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
                                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                             </div>

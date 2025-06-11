@@ -51,7 +51,6 @@ const Header = () => {
       label: t('profile'),
       onClick: () => navigate('/user/profile'),
     },
-    
     {
       key: 'invoice_search',
       icon: <FontAwesomeIcon icon={faFileInvoice} className="text-blue-500" />,
@@ -61,7 +60,6 @@ const Header = () => {
     {
       type: 'divider',
     },
-    
     {
       key: 'logout',
       icon: <FontAwesomeIcon icon={faSignOutAlt} className="text-blue-500" />,
@@ -97,6 +95,7 @@ const Header = () => {
     { path: '/user/home', label: t('home') },
     { path: '/user/rooms', label: t('rooms') },
     { path: '/user/aboutus', label: t('about') },
+    { path: '/user/contact', label: t('contact') },
   ];
 
   return (
@@ -145,13 +144,13 @@ const Header = () => {
             <div>
               <h1
                 onClick={() => navigate('/user/home')}
-                className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent cursor-pointer hover:scale-105 transition-transform"
+                className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent cursor-pointer transition-transform"
               >
                 {t('hotel_name')}
               </h1>
               <p
                 onClick={() => navigate('/user/home')}
-                className="text-xs text-gray-400 cursor-pointer hover:scale-105 transition-transform"
+                className="text-xs text-gray-400 "
               >
                 {t('slogan')}
               </p>
@@ -178,6 +177,13 @@ const Header = () => {
                 )}
               </NavLink>
             ))}
+            <NavLink to="/user/rooms">
+              <Button
+                className="bg-gradient-to-r from-blue-900 to-purple-400 text-white font-semibold px-6 py-2 rounded-full hover:from-blue-500 hover:to-purple-500 transition-all duration-300 shadow-md hover:shadow-lg"
+              >
+                {t('book_now', { defaultValue: 'Đặt ngay' })}
+              </Button>
+            </NavLink>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -246,6 +252,13 @@ const Header = () => {
                 {item.label}
               </NavLink>
             ))}
+            <NavLink
+              to="/user/rooms"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block px-4 py-3 rounded-lg bg-gradient-to-r from-blue-400 to-purple-400 text-white font-semibold text-center hover:from-blue-500 hover:to-purple-500 transition-all duration-300"
+            >
+              {t('dat_ngay', { defaultValue: 'Đặt Ngay' })}
+            </NavLink>
           </nav>
           <div className="space-y-2">
             {userMenuItems.map((item) =>

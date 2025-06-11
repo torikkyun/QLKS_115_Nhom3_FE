@@ -301,19 +301,12 @@ const StaffManagement = () => {
                                     <Option value={1}>Quản lý</Option>
                                 </Select>
                             </Form.Item>
-                            <Form.Item
-                                name="matKhau"
-                                label="Mật khẩu"
-                                rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
-                            >
-                                <Input.Password />
-                            </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" className="w-full">
                                     Lưu
                                 </Button>
-                            </Form.Item>
-                        </Form>
+                                </Form.Item>
+                            </Form>
                     </Modal>
                     <Modal
                         title="Xác nhận xóa"

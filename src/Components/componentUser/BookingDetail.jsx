@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, DatePicker, Select, message } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -20,10 +21,11 @@ const BookingPanel = ({
   handleAddBooking,
   onBookNow
 }) => {
+  const { t } = useTranslation();
+
   const isPromotionApplicable = (promo) => {
     if (!dates[0] || !dates[1]) return false;
     const checkInDate = dayjs(dates[0]);
-    const checkOutDate = dayjs(dates[1]);
     const startDate = dayjs(promo.ngayBatDau);
     const endDate = dayjs(promo.ngayKetThuc);
 
@@ -46,7 +48,7 @@ const BookingPanel = ({
 
   const handleBookNowClick = () => {
     if (!dates[0] || !dates[1]) {
-      message.error('Vui lòng chọn ngày nhận và ngày trả phòng');
+      message.error(t('select_dates_required', { defaultValue: 'Vui lòng chọn ngày nhận và ngày trả phòng' }));
       return;
     }
     const newBooking = {
@@ -62,11 +64,11 @@ const BookingPanel = ({
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
-      <h2 className="text-xl font-semibold mb-4">Thông tin đặt phòng</h2>
+      <h2 className="text-xl font-semibold mb-4">{t('booking_info', { defaultValue: 'Thông tin đặt phòng' })}</h2>
       
       {/* Date Selection */}
       <div className="mb-4">
-        <label className="text-gray-600">Chọn ngày</label>
+        <label className="text-gray-600">{t('select_dates', { defaultValue: 'Chọn ngày' })}</label>
         <RangePicker
           value={dates}
           onChange={handleDateChange}
@@ -78,15 +80,15 @@ const BookingPanel = ({
 
       {/* Promotion Selection */}
       <div className="mb-4">
-        <label className="text-gray-600">Khuyến mãi</label>
+        <label className="text-gray-600">{t('promotion', { defaultValue: 'Khuyến mãi' })}</label>
         <Select
           value={selectedPromotion?.maKhuyenMai || null}
           onChange={handlePromotionChange}
-          placeholder="Chọn khuyến mãi"
+          placeholder={t('select_promotion', { defaultValue: 'Chọn khuyến mãi' })}
           className="w-full"
           disabled={!dates[0] || !dates[1]}
         >
-          <Option value={null}>Không áp dụng khuyến mãi</Option>
+          <Option value={null}>{t('no_promotion', { defaultValue: 'Không áp dụng khuyến mãi' })}</Option>
           {promotions
             .filter(isPromotionApplicable)
             .map(promo => (
@@ -99,12 +101,12 @@ const BookingPanel = ({
 
       {/* Price Breakdown */}
       <div className="flex justify-between items-center mb-3 pb-3 border-b">
-        <span className="text-gray-600">Giá phòng / đêm</span>
+        <span className="text-gray-600">{t('price_per_night', { defaultValue: 'Giá phòng / đêm' })}</span>
         <span className="font-semibold">{(room.giaPhong || 0).toLocaleString()} VND</span>
       </div>
       
       <div className="flex justify-between items-center mb-3 pb-3 border-b">
-        <span className="text-gray-600">Số đêm</span>
+        <span className="text-gray-600">{t('nights', { defaultValue: 'Số đêm' })}</span>
         <span className="font-semibold">{numberOfNights}</span>
       </div>
 
@@ -114,7 +116,7 @@ const BookingPanel = ({
           .filter(service => selectedServices.includes(service.maDichVu))
           .map(item => (
             <div key={item.maDichVu} className="flex justify-between items-center mb-3 pb-3 border-b">
-              <span className="text-gray-600">{item.tenDichVu || 'Tên không xác định'}</span>
+              <span className="text-gray-600">{item.tenDichVu || t('unknown_service', { defaultValue: 'Tên không xác định' })}</span>
               <span className="font-semibold">{(item.gia || 0).toLocaleString()} VND</span>
             </div>
           ))}
@@ -122,7 +124,9 @@ const BookingPanel = ({
       {/* Promotion Discount */}
       {selectedPromotion && isPromotionApplicable(selectedPromotion) && (
         <div className="flex justify-between items-center mb-3 pb-3 border-b">
-          <span className="text-gray-600">Khuyến mãi ({selectedPromotion.tenKhuyenMai})</span>
+          <span className="text-gray-600">
+            {t('promotion', { defaultValue: 'Khuyến mãi' })} ({selectedPromotion.tenKhuyenMai})
+          </span>
           <span className="font-semibold text-green-600">
             -{selectedPromotion.tenKieuKhuyenMai === 'Phần trăm'
               ? `${selectedPromotion.giaTriKhuyenMai}%`
@@ -133,7 +137,7 @@ const BookingPanel = ({
 
       {/* Total */}
       <div className="flex justify-between items-center mb-6 pt-2 text-lg">
-        <span className="font-medium">Tổng cộng</span>
+        <span className="font-medium">{t('total', { defaultValue: 'Tổng cộng' })}</span>
         <span className="font-bold text-blue-600">{calculateBookingTotal().toLocaleString()} VND</span>
       </div>
 
@@ -146,7 +150,7 @@ const BookingPanel = ({
         onClick={handleAddBooking}
         disabled={!dates[0] || !dates[1]}
       >
-        Thêm vào danh sách
+        {t('add_to_list', { defaultValue: 'Thêm vào danh sách' })}
       </Button>
       
       <Button
@@ -157,11 +161,11 @@ const BookingPanel = ({
         onClick={handleBookNowClick}
         disabled={!dates[0] || !dates[1]}
       >
-        Đặt phòng ngay
+        {t('book_now', { defaultValue: 'Đặt phòng ngay' })}
       </Button>
 
       <div className="mt-4 text-center text-sm text-gray-500">
-        <InfoCircleOutlined className="mr-1" /> Không mất phí khi đặt phòng
+        <InfoCircleOutlined className="mr-1" />{t('no_booking_fee', { defaultValue: 'Không mất phí khi đặt phòng' })}
       </div>
     </div>
   );

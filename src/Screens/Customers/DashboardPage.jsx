@@ -6,8 +6,11 @@ import PromotionBanner from "../../Components/componentUser/PromotionCard";
 import IntroTyping from "../../Components/componentUser/IntroTyping";
 import Introdution from "../../Components/componentUser/Introdution";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Home = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
       <IntroTyping className="animate__animated animate__fadeInDown" />
@@ -21,7 +24,9 @@ const Home = () => {
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-gray-50 px-4 text-gray-500 text-sm font-semibold">KHÁM PHÁ THÊM</span>
+            <span className="bg-gray-50 px-4 text-gray-500 text-sm font-semibold">
+              {t('explore_more', { defaultValue: 'KHÁM PHÁ THÊM' })}
+            </span>
           </div>
         </div>
         

@@ -1,6 +1,6 @@
-// src/components/Banner.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import bannerImage1 from '../assets/Image/Hotel.jpg';
 import bannerImage2 from '../assets/Image/hotel2.jpg';
 import bannerImage3 from '../assets/Image/hotel3.jpg';
@@ -10,61 +10,63 @@ import banner7 from '../assets/Image/banner7.jpg';
 import banner8 from '../assets/Image/banner8.jpg';
 import banner9 from '../assets/Image/banner9.jpg';
 
-const banners = [
-  {
-    image: banner7,
-    title: 'Khách sạn 8 Bross luôn chào đón bạn',
-    description: 'Khám phá dịch vụ và tiện nghi hàng đầu của chúng tôi.',
-    subtitle: 'Luxury & Comfort'
-  },
-  {
-    image: banner9,
-    title: 'Đến 8Bross để trải nghiệm sự khác biệt',
-    description: 'Khám phá dịch vụ và tiện nghi hàng đầu của chúng tôi.',
-    subtitle: 'Luxury & Comfort'
-  },
-  {
-    image: banner8,
-    title: 'Những đêm nghỉ chân đầy trải nghiệm',
-    description: 'Tận hưởng những chuyến du lịch tuyệt với.',
-    subtitle: 'Trải nghiệm tuyệt vời'
-  },
-  {
-    image: banner5,
-    title: 'Khách sạn 8Bross - Nơi trải nghiệm tuyệt vời bắt đầu',
-    description: 'Khám phá dịch vụ và tiện nghi hàng đầu của chúng tôi.',
-    subtitle: 'Trải nghiệm tuyệt vời'
-  },
-  {
-    image: banner6,
-    title: 'Khám phá sự sang trọng',
-    description: 'Nghỉ dưỡng đẳng cấp với dịch vụ 5 sao.',
-    subtitle: 'Trải nghiệm tuyệt vời'
-  },
-  {
-    image: bannerImage1,
-    title: 'Chào mừng đến với Khách Sạn 8Bross',
-    description: 'Trải nghiệm không gian nghỉ dưỡng thoải mái và hiện đại.',
-    subtitle: 'Luxury & Comfort'
-  },
-  {
-    image: bannerImage2,
-    title: 'Khám phá sự sang trọng',
-    description: 'Nghỉ dưỡng đẳng cấp với dịch vụ 5 sao.',
-    subtitle: 'Premium Experience'
-  },
-  {
-    image: bannerImage3,
-    title: 'Thư giãn tuyệt đối',
-    description: 'Hòa mình vào không gian yên bình và tiện nghi.',
-    subtitle: 'Perfect Relaxation'
-  },
-];
-
 const Banner = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Sử dụng i18n cho title, description, subtitle
+  const banners = [
+    {
+      image: banner7,
+      title: t('banner_title_1', { defaultValue: 'Khách sạn 8 Bross luôn chào đón bạn' }),
+      description: t('banner_desc_1', { defaultValue: 'Khám phá dịch vụ và tiện nghi hàng đầu của chúng tôi.' }),
+      subtitle: t('banner_subtitle_1', { defaultValue: 'Luxury & Comfort' }),
+    },
+    {
+      image: banner9,
+      title: t('banner_title_2', { defaultValue: 'Đến 8Bross để trải nghiệm sự khác biệt' }),
+      description: t('banner_desc_2', { defaultValue: 'Khám phá dịch vụ và tiện nghi hàng đầu của chúng tôi.' }),
+      subtitle: t('banner_subtitle_2', { defaultValue: 'Luxury & Comfort' }),
+    },
+    {
+      image: banner8,
+      title: t('banner_title_3', { defaultValue: 'Những đêm nghỉ chân đầy trải nghiệm' }),
+      description: t('banner_desc_3', { defaultValue: 'Tận hưởng những chuyến du lịch tuyệt với.' }),
+      subtitle: t('banner_subtitle_3', { defaultValue: 'Trải nghiệm tuyệt vời' }),
+    },
+    {
+      image: banner5,
+      title: t('banner_title_4', { defaultValue: 'Khách sạn 8Bross - Nơi trải nghiệm tuyệt vời bắt đầu' }),
+      description: t('banner_desc_4', { defaultValue: 'Khám phá dịch vụ và tiện nghi hàng đầu của chúng tôi.' }),
+      subtitle: t('banner_subtitle_4', { defaultValue: 'Trải nghiệm tuyệt vời' }),
+    },
+    {
+      image: banner6,
+      title: t('banner_title_5', { defaultValue: 'Khám phá sự sang trọng' }),
+      description: t('banner_desc_5', { defaultValue: 'Nghỉ dưỡng đẳng cấp với dịch vụ 5 sao.' }),
+      subtitle: t('banner_subtitle_5', { defaultValue: 'Trải nghiệm tuyệt vời' }),
+    },
+    {
+      image: bannerImage1,
+      title: t('banner_title_6', { defaultValue: 'Chào mừng đến với Khách Sạn 8Bross' }),
+      description: t('banner_desc_6', { defaultValue: 'Trải nghiệm không gian nghỉ dưỡng thoải mái và hiện đại.' }),
+      subtitle: t('banner_subtitle_6', { defaultValue: 'Luxury & Comfort' }),
+    },
+    {
+      image: bannerImage2,
+      title: t('banner_title_7', { defaultValue: 'Khám phá sự sang trọng' }),
+      description: t('banner_desc_7', { defaultValue: 'Nghỉ dưỡng đẳng cấp với dịch vụ 5 sao.' }),
+      subtitle: t('banner_subtitle_7', { defaultValue: 'Premium Experience' }),
+    },
+    {
+      image: bannerImage3,
+      title: t('banner_title_8', { defaultValue: 'Thư giãn tuyệt đối' }),
+      description: t('banner_desc_8', { defaultValue: 'Hòa mình vào không gian yên bình và tiện nghi.' }),
+      subtitle: t('banner_subtitle_8', { defaultValue: 'Perfect Relaxation' }),
+    },
+  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -72,6 +74,7 @@ const Banner = () => {
     }, 5000);
 
     return () => clearInterval(interval);
+    // eslint-disable-next-line
   }, [currentIndex]);
 
   const handleSlideChange = (newIndex) => {
@@ -140,7 +143,7 @@ const Banner = () => {
               className="group px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-full font-semibold text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-white/20"
             >
               <span className="flex items-center gap-2 cursor-pointer">
-                XEM PHÒNG NGAY
+                {t('view_rooms_now', { defaultValue: 'XEM PHÒNG NGAY' })}
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>

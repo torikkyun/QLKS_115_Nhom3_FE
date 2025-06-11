@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Button from "../Button";
+import { useTranslation } from "react-i18next";
 import { promotions } from "../../Mock/mockData";
-
-
 
 const FilterPanel = ({
   minPrice,
@@ -16,18 +15,18 @@ const FilterPanel = ({
   onMaxPriceChange,
   onRoomTypeChange,
   onResetFilter,
-  
 }) => {
+  const { t } = useTranslation();
   const trackWidth = ((maxPrice - minPrice) / (maxPriceLimit - minPriceLimit)) * 100;
   const trackLeft = ((minPrice - minPriceLimit) / (maxPriceLimit - minPriceLimit)) * 100;
 
   return (
     <div className="bg-white p-6 rounded-xl shadow-md">
-      <h2 className="text-lg font-semibold mb-4">Lọc theo giá</h2>
+      <h2 className="text-lg font-semibold mb-4">{t('filter_by_price', { defaultValue: 'Lọc theo giá' })}</h2>
       <div className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-2">
-            Chọn khoảng giá (VND)
+            {t('select_price_range', { defaultValue: 'Chọn khoảng giá (VND)' })}
           </label>
           <div className="relative h-6 px-4">
             <div
@@ -52,7 +51,7 @@ const FilterPanel = ({
               onChange={(e) => onMinPriceChange(parseFloat(e.target.value))}
               className="absolute left-0 right-0 h-1.5 bg-transparent rounded-full appearance-none cursor-pointer"
               style={{ top: "9px", zIndex: 3 }}
-              aria-label="Giá tối thiểu"
+              aria-label={t('min_price', { defaultValue: 'Giá tối thiểu' })}
             />
             <input
               type="range"
@@ -63,7 +62,7 @@ const FilterPanel = ({
               onChange={(e) => onMaxPriceChange(parseFloat(e.target.value))}
               className="absolute left-0 right-0 h-1.5 bg-transparent rounded-full appearance-none cursor-pointer"
               style={{ top: "9px", zIndex: 2 }}
-              aria-label="Giá tối đa"
+              aria-label={t('max_price', { defaultValue: 'Giá tối đa' })}
             />
           </div>
           <div className="flex justify-between mt-4 px-4">
@@ -73,7 +72,7 @@ const FilterPanel = ({
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-600 mb-2">
-            Lọc theo loại phòng
+            {t('filter_by_room_type', { defaultValue: 'Lọc theo loại phòng' })}
           </label>
           <div className="space-y-2">
             {roomTypeOptions.map((roomType) => (
@@ -86,25 +85,22 @@ const FilterPanel = ({
                 />
                 <span className="ml-2 text-sm text-gray-600">
                   {roomType === "standard"
-                    ? "Tiêu chuẩn"
+                    ? t('standard', { defaultValue: 'Tiêu chuẩn' })
                     : roomType === "deluxe"
-                    ? "Cao cấp"
+                    ? t('deluxe', { defaultValue: 'Cao cấp' })
                     : roomType === "suite"
-                    ? "Hạng sang"
+                    ? t('suite', { defaultValue: 'Hạng sang' })
                     : roomType}
                 </span>
               </label>
             ))}
           </div>
         </div>
-        <div>
-          
-        </div>
         <Button
           onClick={onResetFilter}
           className="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-200"
         >
-          Xóa bộ lọc
+          {t('reset_filter', { defaultValue: 'Xóa bộ lọc' })}
         </Button>
       </div>
     </div>

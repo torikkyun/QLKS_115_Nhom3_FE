@@ -2,8 +2,11 @@ import React from 'react';
 import { Button } from 'antd';
 import { FaTrash, FaBed, FaCalendarAlt, FaConciergeBell } from 'react-icons/fa';
 import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
 
 const BookingItem = ({ booking, onRemove, onBook }) => {
+  const { t } = useTranslation();
+
   // Hàm kiểm tra điều kiện áp dụng khuyến mãi (tương tự RoomDetail.js)
   const isPromotionApplicable = (promo, dates) => {
     if (!dates[0] || !dates[1]) return false;
@@ -13,14 +16,6 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
     const endDate = dayjs(promo.ngayKetThuc);
 
     const isWithinPeriod = !checkInDate.isBefore(startDate) && !checkInDate.isAfter(endDate);
-    console.log('Promotion Check in BookingItem:', {
-      checkInDate: checkInDate.format('DD/MM/YYYY'),
-      startDate: startDate.format('DD/MM/YYYY'),
-      endDate: endDate.format('DD/MM/YYYY'),
-      isWithinPeriod,
-      maKhuyenMai: promo.maKhuyenMai,
-    });
-
     return isWithinPeriod;
   };
 
@@ -30,7 +25,6 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
 
     // Áp dụng khuyến mãi từ booking.promotion
     const promotion = booking.promotion;
-    console.log('Promotion for BookingItem:', { bookingId: booking.id, promotion }); // Debug
     if (promotion && isPromotionApplicable(promotion, booking.dates)) {
       const tenKieuKhuyenMai = promotion.tenKieuKhuyenMai || 'Phần trăm';
       let giaTriKhuyenMai = promotion.giaTriKhuyenMai || 0;
@@ -38,18 +32,13 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
       // Nếu mô tả khuyến mãi có chứa "20%", sử dụng 20% thay vì giá trị không nhất quán
       if (promotion.moTaKhuyenMai?.includes('20%')) {
         giaTriKhuyenMai = 20;
-        console.log('Overriding giaTriKhuyenMai to 20% due to moTaKhuyenMai:', promotion.moTaKhuyenMai);
       }
 
       if (tenKieuKhuyenMai === 'Phần trăm') {
         roomTotal *= (1 - giaTriKhuyenMai / 100);
-        console.log('Applied percentage discount:', { roomTotal, giaTriKhuyenMai });
       } else if (tenKieuKhuyenMai === 'Giảm giá trực tiếp') {
         roomTotal -= giaTriKhuyenMai;
-        console.log('Applied direct discount:', { roomTotal, giaTriKhuyenMai });
       }
-    } else {
-      console.log('No promotion applied for booking:', booking.id);
     }
 
     return Math.max(0, serviceTotal + roomTotal); // Đảm bảo tổng không âm
@@ -57,8 +46,8 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
 
   // Hàm hiển thị thông tin khuyến mãi
   const renderPromotionInfo = (promotion) => {
-    if (!promotion) return 'Không áp dụng khuyến mãi';
-    const { tenKhuyenMai, maKhuyenMai, tenKieuKhuyenMai, giaTriKhuyenMai } = promotion;
+    if (!promotion) return t('no_promotion', { defaultValue: 'Không áp dụng khuyến mãi' });
+    const { tenKhuyenMai, tenKieuKhuyenMai, giaTriKhuyenMai } = promotion;
     const discountText = tenKieuKhuyenMai === 'Phần trăm'
       ? `(-${giaTriKhuyenMai}%)`
       : `(-${giaTriKhuyenMai.toLocaleString()} VND)`;
@@ -71,7 +60,7 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
         <div className="md:w-80 h-64 md:h-auto relative">
           <img
             src={booking.room.imageUrl || 'https://ezcloud.vn/wp-content/uploads/2024/04/khach-san-o-hai-phong.webp'}
-            alt={`Phòng ${booking.room.soPhong}`}
+            alt={t('room', { defaultValue: 'Phòng' }) + ` ${booking.room.soPhong}`}
             className="w-full h-full object-cover"
           />
           <Button
@@ -82,21 +71,23 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
           />
         </div>
         <div className="flex-1 p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Phòng {booking.room.soPhong}</h2>
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            {t('room', { defaultValue: 'Phòng' })} {booking.room.soPhong}
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div className="space-y-4">
               <div className="flex items-center">
                 <FaCalendarAlt className="text-blue-600 mr-3" />
                 <div>
-                  <p className="text-sm text-gray-500">Ngày nhận phòng</p>
-                  <p className="font-semibold text-gray-800">{booking.dates[0]?.format('DD/MM/YYYY') || 'Chưa chọn'}</p>
+                  <p className="text-sm text-gray-500">{t('check_in', { defaultValue: 'Ngày nhận phòng' })}</p>
+                  <p className="font-semibold text-gray-800">{booking.dates[0]?.format('DD/MM/YYYY') || t('not_selected', { defaultValue: 'Chưa chọn' })}</p>
                 </div>
               </div>
               <div className="flex items-center">
                 <FaBed className="text-blue-600 mr-3" />
                 <div>
-                  <p className="text-sm text-gray-500">Số đêm</p>
-                  <p className="font-semibold text-gray-800">{booking.numberOfNights} đêm</p>
+                  <p className="text-sm text-gray-500">{t('nights', { defaultValue: 'Số đêm' })}</p>
+                  <p className="font-semibold text-gray-800">{booking.numberOfNights} {t('night', { defaultValue: 'đêm' })}</p>
                 </div>
               </div>
             </div>
@@ -104,8 +95,8 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
               <div className="flex items-center">
                 <FaCalendarAlt className="text-blue-600 mr-3" />
                 <div>
-                  <p className="text-sm text-gray-500">Ngày trả phòng</p>
-                  <p className="font-semibold text-gray-800">{booking.dates[1]?.format('DD/MM/YYYY') || 'Chưa chọn'}</p>
+                  <p className="text-sm text-gray-500">{t('check_out', { defaultValue: 'Ngày trả phòng' })}</p>
+                  <p className="font-semibold text-gray-800">{booking.dates[1]?.format('DD/MM/YYYY') || t('not_selected', { defaultValue: 'Chưa chọn' })}</p>
                 </div>
               </div>
             </div>
@@ -114,7 +105,7 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
             <div className="mb-6">
               <h4 className="font-semibold text-gray-800 mb-3 flex items-center">
                 <FaConciergeBell className="mr-2 text-blue-600" />
-                Dịch vụ đã chọn
+                {t('selected_services', { defaultValue: 'Dịch vụ đã chọn' })}
               </h4>
               <div className="flex flex-wrap gap-2">
                 {booking.services.map(service => (
@@ -132,15 +123,15 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
             {/* Hiển thị thông tin khuyến mãi */}
             {booking.promotion && (
               <div className="mb-4">
-                <h4 className="font-semibold text-gray-800 mb-2">Khuyến mãi</h4>
+                <h4 className="font-semibold text-gray-800 mb-2">{t('promotion', { defaultValue: 'Khuyến mãi' })}</h4>
                 <p className="text-sm text-green-600">{renderPromotionInfo(booking.promotion)}</p>
               </div>
             )}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
               <div className="mb-4 sm:mb-0">
-                <p className="text-sm text-gray-500 mb-1">Tổng tiền</p>
+                <p className="text-sm text-gray-500 mb-1">{t('total', { defaultValue: 'Tổng tiền' })}</p>
                 <p className="text-3xl font-bold text-blue-600">{calculateBookingTotal().toLocaleString()} VND</p>
-                <p className="text-sm text-gray-500">Đã bao gồm thuế và phí</p>
+                <p className="text-sm text-gray-500">{t('tax_fee_included', { defaultValue: 'Đã bao gồm thuế và phí' })}</p>
               </div>
               <Button
                 type="primary"
@@ -148,7 +139,7 @@ const BookingItem = ({ booking, onRemove, onBook }) => {
                 className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 border-0 rounded-full px-8 h-12 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                 onClick={() => onBook(booking)}
               >
-                Đặt Phòng Này
+                {t('book_this_room', { defaultValue: 'Đặt Phòng Này' })}
               </Button>
             </div>
           </div>

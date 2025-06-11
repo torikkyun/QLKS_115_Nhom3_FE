@@ -34,20 +34,11 @@ const RoomFilter = ({ onFilterChange }) => {
         className="w-full"
         allowClear
       >
-        <Option value="0">Trống</Option>
-        <Option value="1">Đã sử dụng</Option>
+        <Option value="0">Đã sử dụng</Option>
+        <Option value="1">Trống</Option>
+        
       </Select>
-      <Select
-        placeholder="Chọn loại phòng"
-        value={type}
-        onChange={(value) => setType(value)}
-        className="w-full"
-        allowClear
-      >
-        <Option value="1">Phòng đơn</Option>
-        <Option value="2">Phòng đôi</Option>
-        <Option value="3">Phòng gia đình</Option>
-      </Select>
+     
       <div className="flex space-x-2">
         <Button
           type="primary"

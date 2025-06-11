@@ -17,6 +17,7 @@ import InvoicePage from "../Screens/Customers/InvoicePage";
 import RoomsPage from "../Screens/Customers/RoomsPage";
 
 import LookupInvoicePage from "../Screens/Customers/LookupInvoicePage";
+import ContactPage from "../Screens/Customers/ContactPage";
 
 export const router = createBrowserRouter([
     {
@@ -86,6 +87,10 @@ export const router = createBrowserRouter([
     {
         path: "/user/lookupinvoice",
         element: <LookupInvoicePage />,
+    },
+    {
+        path: "/user/contact",
+        element: <ContactPage />,
     }
 
 

@@ -111,7 +111,7 @@ const BillManagement = () => {
                 value={filterText}
                 onChange={e => setFilterText(e.target.value)}
                 onPressEnter={handleFilter}
-                style={{ width: 300, }}
+                style={{ width: 500, }}
               />
               <Button type="primary" onClick={handleFilter}  style={{ width: 100,marginLeft: 8 }}>
                 Lọc

@@ -19,7 +19,6 @@ const RoomList = ({ rooms, onEdit, onDelete }) => {
         </span>
       ),
     },
-    { title: 'Giá Phòng', dataIndex: 'giaPhong', key: 'giaPhong' },
     {
       title: 'Hành Động',
       key: 'action',

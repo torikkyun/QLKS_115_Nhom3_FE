@@ -1,10 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
-import { Pagination, Spin } from 'antd';
+import { Pagination, Spin, Input, Button } from 'antd';
 import Sidebar from '../../Components/componentsAdmin/SideBar';
 import Header from '../../Common/Header';
 import { getInvoices } from '../../apis/apiinvoice';
-import FilterBill from '../../Components/componentsAdmin/FilterBill';
 
 const BillCard = ({ bill }) => {
   const customer = bill.datPhong?.khachHang;
@@ -49,24 +48,27 @@ const BillCard = ({ bill }) => {
 };
 
 const BillManagement = () => {
-  // State Management
   const [bills, setBills] = useState([]);
+  const [filteredBills, setFilteredBills] = useState([]);
+  const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // Fetch Data
   useEffect(() => {
     const fetchBills = async () => {
       setLoading(true);
       try {
         const result = await getInvoices(currentPage, pageSize);
-        setBills(result.data || []);
+        const data = result.data || [];
+        setBills(data);
         setTotalRecords(result.totalRecords || 0);
+        setFilteredBills(data); // initialize filtered
       } catch (err) {
         console.error('Lỗi khi fetch hóa đơn:', err);
         setBills([]);
+        setFilteredBills([]);
       } finally {
         setLoading(false);
       }
@@ -74,38 +76,68 @@ const BillManagement = () => {
     fetchBills();
   }, [currentPage, pageSize]);
 
-  // Handle Pagination Change
-  const handlePageChange = (page, pageSize) => {
+  const handlePageChange = (page, size) => {
     setCurrentPage(page);
-    setPageSize(pageSize);
+    setPageSize(size);
   };
-  
+
+  const handleFilter = () => {
+    const text = filterText.trim().toLowerCase();
+    if (!text) {
+      setFilteredBills(bills);
+      return;
+    }
+    const filtered = bills.filter(bill => {
+      const idMatch = bill.datPhong?.maDatPhong?.toString().toLowerCase() === text;
+      const customer = bill.datPhong?.khachHang;
+      const nameMatch = customer?.ho?.toLowerCase().includes(text) ||
+                        customer?.ten?.toLowerCase().includes(text);
+      return idMatch || nameMatch;
+    });
+    setFilteredBills(filtered);
+  };
 
   return (
     <div className="flex h-screen">
-
       <Sidebar />
       <div className="flex flex-col flex-1 bg-gray-100 min-h-screen">
         <Header className="sticky top-0 z-10 bg-gray-100" />
-
         <div className="flex-1 p-6 bg-gray-100 overflow-auto pt-16">
           <h1 className="text-2xl font-bold mb-6 text-center">Danh sách hóa đơn</h1>
+          <div className="max-w-5xl mx-auto w-full space-y-4">
+            <div className="flex items-center space-x-2">
+              <Input
+                placeholder="Tìm theo mã đặt phòng hoặc tên khách hàng"
+                value={filterText}
+                onChange={e => setFilterText(e.target.value)}
+                onPressEnter={handleFilter}
+                style={{ width: 300, }}
+              />
+              <Button type="primary" onClick={handleFilter}  style={{ width: 100,marginLeft: 8 }}>
+                Lọc
+              </Button>
+              <Button onClick={() => {
+                setFilterText('');
+                setFilteredBills(bills);
+              }}  style={{ width: 100}}>
+                Xóa lọc
+              </Button>
+            </div>
 
-          <div className="max-w-5xl mx-auto w-full">
-            <FilterBill />
             {loading ? (
               <div className="flex justify-center py-6">
                 <Spin size="large" />
               </div>
-            ) : bills.length === 0 ? (
+            ) : filteredBills.length === 0 ? (
               <div className="text-center py-6 text-gray-500">Không có hóa đơn nào.</div>
             ) : (
               <div className="space-y-4">
-                {bills.map((bill, index) => (
-                  <BillCard key={index} bill={bill} />
+                {filteredBills.map((bill, idx) => (
+                  <BillCard key={idx} bill={bill} />
                 ))}
               </div>
             )}
+
             {totalRecords > pageSize && (
               <Pagination
                 current={currentPage}

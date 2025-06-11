@@ -85,12 +85,29 @@ const PromotionsPage = () => {
     const handleEdit = (promo) => {
         setCurrentPromo(promo);
         setIsEditing(true);
+
+        // Tìm đúng id của kiểu khuyến mãi dựa vào danh sách promotionTypes
+        let kieuKhuyenMaiId = promo.kieuKhuyenMai;
+        if (typeof kieuKhuyenMaiId !== 'number') {
+            // Nếu là string, cố gắng chuyển sang số
+            kieuKhuyenMaiId = parseInt(kieuKhuyenMaiId);
+        }
+        // Nếu vẫn NaN, thử map từ tên sang id
+        if (isNaN(kieuKhuyenMaiId)) {
+            const found = promotionTypes.find(
+                (type) =>
+                    type.tenKieuKhuyenMai === promo.tenKieuKhuyenMai ||
+                    type.kieuKhuyenMai === promo.tenKieuKhuyenMai
+            );
+            kieuKhuyenMaiId = found ? found.id : undefined;
+        }
+
         form.setFieldsValue({
             tenKhuyenMai: promo.tenKhuyenMai,
             moTaKhuyenMai: promo.moTaKhuyenMai,
             dateRange: [moment(promo.ngayBatDau), moment(promo.ngayKetThuc)],
             giaTriKhuyenMai: promo.giaTriKhuyenMai,
-            kieuKhuyenMai: parseInt(promo.kieuKhuyenMai),
+            kieuKhuyenMai: kieuKhuyenMaiId,
             ghiChu: promo.ghiChu,
         });
         setModalVisible(true);
@@ -104,10 +121,12 @@ const PromotionsPage = () => {
                 moTaKhuyenMai: values.moTaKhuyenMai,
                 ngayBatDau: values.dateRange[0].format('YYYY-MM-DD'),
                 ngayKetThuc: values.dateRange[1].format('YYYY-MM-DD'),
-                kieuKhuyenMai: parseInt(values.kieuKhuyenMai),
+                kieuKhuyenMai: parseInt(values.kieuKhuyenMai), // Sử dụng ID cho POST
                 giaTriKhuyenMai: parseFloat(values.giaTriKhuyenMai) || 0,
                 ghiChu: values.ghiChu || '',
             };
+
+            console.log('Dữ liệu gửi đi (promoData):', promoData);
 
             if (!moment(promoData.ngayBatDau).isValid() || !moment(promoData.ngayKetThuc).isValid()) {
                 throw new Error('Ngày không hợp lệ!');
@@ -120,36 +139,27 @@ const PromotionsPage = () => {
             let result;
             if (isEditing) {
                 result = await updatePromotion(currentPromo.maKhuyenMai, promoData);
-                if (result) {
-                    setPromotions(
-                        promotions.map((p) =>
-                            p.maKhuyenMai === currentPromo.maKhuyenMai ? { ...p, ...result } : p
-                        )
-                    );
-                    message.success('Cập nhật khuyến mãi thành công!');
-                } else {
-                    throw new Error('Cập nhật thất bại!');
-                }
+                console.log('Kết quả cập nhật khuyến mãi:', result);
+                setPromotions(
+                    promotions.map((p) =>
+                        p.maKhuyenMai === currentPromo.maKhuyenMai ? { ...p, ...result } : p
+                    )
+                );
+                message.success('Cập nhật khuyến mãi thành công!');
             } else {
                 result = await createPromotion(promoData);
-                console.log('Kết quả từ createPromotion:', result);
-
-                if (result) {
-                    fetchPromotionsData();
-                    message.success('Tạo khuyến mãi thành công!');
-                } else {
-                    throw new Error('Tạo thất bại!');
-                }
+                console.log('Kết quả tạo khuyến mãi:', result);
+                fetchPromotionsData(); // Cập nhật danh sách sau khi tạo
+                message.success('Tạo khuyến mãi thành công!');
             }
 
             setModalVisible(false);
             form.resetFields();
         } catch (error) {
-            console.error('Lỗi khi gửi form:', error.message);
-            message.error(`Vui lòng kiểm tra lại thông tin! Chi tiết: ${error.message}`);
+            console.error('Lỗi khi xử lý khuyến mãi:', error.message);
+            message.error('Lỗi khi xử lý khuyến mãi: ' + error.message);
         }
     };
-
     const handleDelete = async (id) => {
         try {
             await deletePromotion(id);
@@ -306,7 +316,7 @@ const PromotionsPage = () => {
                                 <RangePicker format="YYYY-MM-DD" style={{ width: '100%' }} />
                             </Form.Item>
                             <Form.Item
-                                name="tenKieuKhuyenMai"
+                                name="kieuKhuyenMai"
                                 label="Kiểu Khuyến mãi"
                                 rules={[{ required: true, message: 'Vui lòng chọn kiểu khuyến mãi!' }]}
                             >

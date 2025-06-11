@@ -49,7 +49,7 @@ const Header = () => {
       key: 'profile',
       icon: <FontAwesomeIcon icon={faUser} className="text-blue-500" />,
       label: t('profile'),
-      onClick: () => navigate('/user/profile'),
+      onClick: () => navigate('/common/notfoud'),
     },
     {
       key: 'invoice_search',
@@ -60,12 +60,7 @@ const Header = () => {
     {
       type: 'divider',
     },
-    {
-      key: 'logout',
-      icon: <FontAwesomeIcon icon={faSignOutAlt} className="text-blue-500" />,
-      label: t('logout'),
-      onClick: () => navigate('/login'),
-    },
+    
   ];
 
   const languageItems = [

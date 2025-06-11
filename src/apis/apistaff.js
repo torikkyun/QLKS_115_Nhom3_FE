@@ -46,6 +46,10 @@ export async function addStaff(staff) {
       throw new Error('Token không tồn tại');
     }
 
+    if (!staff.ho || !staff.ten || !staff.email || !staff.sdt || !staff.cccd || !staff.vaiTro || !staff.matKhau) {
+      throw new Error('Thiếu các trường bắt buộc!');
+    }
+
     const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/NhanVien`, {
       method: 'POST',
       headers: {
@@ -78,6 +82,10 @@ export async function updateStaff(staff) {
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Token không tồn tại');
+    }
+
+    if (!staff.maNhanVien || !staff.ho || !staff.ten || !staff.email || !staff.sdt || !staff.cccd || !staff.vaiTro) {
+      throw new Error('Thiếu các trường bắt buộc!');
     }
 
     const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/NhanVien/${staff.maNhanVien}`, {

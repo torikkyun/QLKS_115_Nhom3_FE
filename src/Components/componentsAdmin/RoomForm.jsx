@@ -34,7 +34,7 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
         // Chuyển đổi tenTinhTrang thành tinhTrangPhong và thêm các giá trị tự động
         const transformedValues = {
           ...values,
-          tinhTrangPhong: values.tenTinhTrang, // Gửi tinhTrangPhong (0 hoặc 1)
+          tenTinhTrang: values.tenTinhTrang, // Gửi tinhTrangPhong (0 hoặc 1)
           giaPhong, // Thêm giá tự động
           soGiuong, // Thêm số giường tự động
         };

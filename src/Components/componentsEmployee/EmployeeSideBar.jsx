@@ -40,12 +40,6 @@ const EmployeeSideBar = () => {
       label: 'Danh sách đặt phòng',
       path: '/employee/bookings',
     },
-    {
-      key: '3',
-      icon: <IconPlaceholder text="👨🏻‍💼" />,
-      label: 'Tạo tài khoản',
-      path: '/signup',
-    },
   ];
 
 

@@ -21,6 +21,7 @@ import EmployeeCustomerList from "../Screens/Employee/EmployeeCustomerList";
 import EmployeeRoomList from "../Screens/Employee/EmployeeRoomList";
 import EmployeeBookingList from "../Screens/Employee/EmployeeBookingList";
 import AdminBookingList from "../Screens/Admin/AdminBookingList";
+import NotFound from "../Common/NotFoud";
 
 export const router = createBrowserRouter([
     {
@@ -111,5 +112,9 @@ export const router = createBrowserRouter([
         path: "/employee/bookings",
         element: <EmployeeBookingList />
     },
+    {
+        path: "/common/notfoud",
+        element: <NotFound/>,
+    }
 
 ]);

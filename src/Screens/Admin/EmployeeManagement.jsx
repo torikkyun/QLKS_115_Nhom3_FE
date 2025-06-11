@@ -9,6 +9,7 @@ import Header from '../../Common/Header';
 const { Option } = Select;
 
 const StaffManagement = () => {
+    const [form] = Form.useForm(); // Tạo instance form
     const [staff, setStaff] = useState([]);
     const [loading, setLoading] = useState(false);
     const [filters, setFilters] = useState({ search: '', vaiTro: '' });
@@ -56,11 +57,16 @@ const StaffManagement = () => {
 
     const handleAddStaff = () => {
         setEditingStaff(null);
+        form.resetFields(); // Reset form trước khi mở modal thêm
+        console.log('Opening Add Staff Modal, editingStaff:', editingStaff); // Kiểm tra trạng thái
         setIsFormVisible(true);
     };
 
     const handleEditStaff = (record) => {
         setEditingStaff(record);
+        form.resetFields(); // Reset form trước khi đặt giá trị mới
+        form.setFieldsValue(record); // Đặt giá trị từ record
+        console.log('Editing Staff:', record); // Kiểm tra dữ liệu nhân viên được chọn
         setIsFormVisible(true);
     };
 
@@ -85,24 +91,35 @@ const StaffManagement = () => {
 
     const handleSaveStaff = async (values) => {
         try {
-            if (editingStaff) {
+            console.log('Dữ liệu gửi đi:', values); // Log dữ liệu gửi đi
+
+            // Kiểm tra tất cả trường bắt buộc
+            if (!values.ho || !values.ten || !values.email || !values.sdt || !values.cccd || !values.vaiTro) {
+                throw new Error('Vui lòng điền đầy đủ các trường bắt buộc!');
+            }
+
+            if (!editingStaff) {
+                // Thêm: Kiểm tra matKhau
+                if (!values.matKhau) {
+                    throw new Error('Vui lòng nhập mật khẩu!');
+                }
+                const staffData = {
+                    ...values,
+                    matKhau: values.matKhau,
+                };
+                await addStaff(staffData);
+                toast.success('Thêm nhân viên thành công');
+            } else {
+                // Cập nhật: Không cần matKhau
                 await updateStaff({ ...editingStaff, ...values });
                 toast.success('Cập nhật nhân viên thành công');
-            } else {
-                await addStaff(values);
-                toast.success('Thêm nhân viên thành công');
             }
             fetchStaff();
             setIsFormVisible(false);
+            form.resetFields(); // Reset form sau khi lưu
         } catch (error) {
-            if (error.message.includes('Unexpected end of JSON input')) {
-                toast.success(editingStaff ? 'Cập nhật nhân viên thành công' : 'Thêm nhân viên thành công');
-                fetchStaff();
-                setIsFormVisible(false);
-            } else {
-                console.error('Lỗi khi lưu nhân viên:', error.message);
-                toast.error('Lỗi khi lưu nhân viên: ' + error.message);
-            }
+            console.error('Lỗi khi lưu nhân viên:', error.message);
+            toast.error('Lỗi khi lưu nhân viên: ' + error.message);
         }
     };
 
@@ -244,15 +261,18 @@ const StaffManagement = () => {
                     <Modal
                         title={editingStaff ? 'Sửa Nhân Viên' : 'Thêm Nhân Viên'}
                         open={isFormVisible}
-                        onCancel={() => setIsFormVisible(false)}
+                        onCancel={() => {
+                            setIsFormVisible(false);
+                            setEditingStaff(null); // Reset editingStaff khi đóng modal
+                            form.resetFields(); // Reset form khi đóng modal
+                        }}
                         footer={null}
                     >
                         <Form
+                            form={form} // Gắn form instance
                             layout="vertical"
-                            initialValues={editingStaff}
                             onFinish={handleSaveStaff}
                         >
-                            
                             <Form.Item
                                 name="ho"
                                 label="Họ"
@@ -291,22 +311,32 @@ const StaffManagement = () => {
                             >
                                 <Input disabled={!!editingStaff} />
                             </Form.Item>
+                            {!editingStaff && (
+                                <Form.Item
+                                    name="matKhau"
+                                    label="Mật khẩu"
+                                    rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
+                                >
+                                    <Input.Password placeholder="Nhập mật khẩu" />
+                                </Form.Item>
+                            )}
                             <Form.Item
                                 name="vaiTro"
                                 label="Vai trò"
                                 rules={[{ required: true, message: 'Vui lòng chọn vai trò' }]}
                             >
                                 <Select>
-                                    <Option value={0}>Nhân viên</Option>
+                                    
                                     <Option value={1}>Quản lý</Option>
+                                    <Option value={2}>Nhân viên</Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" className="w-full">
                                     Lưu
                                 </Button>
-                                </Form.Item>
-                            </Form>
+                            </Form.Item>
+                        </Form>
                     </Modal>
                     <Modal
                         title="Xác nhận xóa"

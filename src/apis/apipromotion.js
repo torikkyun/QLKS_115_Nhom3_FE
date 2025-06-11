@@ -76,7 +76,14 @@ export async function fetchPromotionTypes() {
 
 export async function createPromotion(promotion) {
   try {
-    if (!promotion.tenKhuyenMai || !promotion.moTaKhuyenMai || !promotion.ngayBatDau || !promotion.ngayKetThuc || !promotion.giaTriKhuyenMai || !promotion.kieuKhuyenMai) {
+    if (
+      !promotion.tenKhuyenMai ||
+      !promotion.moTaKhuyenMai ||
+      !promotion.ngayBatDau ||
+      !promotion.ngayKetThuc ||
+      promotion.giaTriKhuyenMai === undefined ||
+      promotion.kieuKhuyenMai === undefined
+    ) {
       throw new Error('Thiếu các trường bắt buộc!');
     }
 
@@ -106,11 +113,23 @@ export async function createPromotion(promotion) {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+      // Nếu có lỗi, cố gắng parse JSON, nếu không được thì trả về lỗi mặc định
+      let errorMessage = `HTTP error! Status: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+      } catch { }
+      throw new Error(errorMessage);
     }
 
-    return await response.json();
+    // Xử lý trường hợp response không có body hoặc không phải JSON
+    const text = await response.text();
+    if (!text) return {}; // hoặc return { success: true }
+    try {
+      return JSON.parse(text);
+    } catch {
+      return {}; // hoặc throw new Error('Phản hồi API không hợp lệ!');
+    }
   } catch (error) {
     console.error('Lỗi khi tạo khuyến mãi:', error.message);
     throw error;
@@ -139,11 +158,21 @@ export async function updatePromotion(id, promotion) {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+      let errorMessage = `HTTP error! Status: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+      } catch { }
+      throw new Error(errorMessage);
     }
 
-    return await response.json();
+    const text = await response.text();
+    if (!text) return {};
+    try {
+      return JSON.parse(text);
+    } catch {
+      return {};
+    }
   } catch (error) {
     console.error(`Lỗi khi cập nhật khuyến mãi với ID ${id}:`, error.message);
     throw error;

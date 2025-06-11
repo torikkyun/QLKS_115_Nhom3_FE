@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronRight, Star, Sparkles, Heart } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const Introduction = () => {
+  const { t } = useTranslation();
   const [visibleSections, setVisibleSections] = useState(new Set());
 
   // Simulate scroll observer
@@ -19,30 +21,30 @@ const Introduction = () => {
   const sections = [
     {
       image: 'https://housedesign.vn/wp-content/uploads/2020/03/giuong-ngu-khach-san.jpg',
-      title: 'KHÔNG GIAN NGHỈ NGƠI THÔNG MINH',
-      description: 'Trải nghiệm công nghệ tiên tiến với phòng ngủ thông minh được trang bị đầy đủ tiện nghi hiện đại. Chỉ với vài thao tác đơn giản, bạn có thể điều khiển toàn bộ không gian để tạo nên môi trường nghỉ ngơi hoàn hảo.',
-      highlight: 'LƯU TRÚ 24/7',
-      subTitle: 'PHÒNG NGỦ THÔNG MINH & TIỆN NGHI',
+      title: t('intro_smart_space_title', { defaultValue: 'KHÔNG GIAN NGHỈ NGƠI THÔNG MINH' }),
+      description: t('intro_smart_space_desc', { defaultValue: 'Trải nghiệm công nghệ tiên tiến với phòng ngủ thông minh được trang bị đầy đủ tiện nghi hiện đại. Chỉ với vài thao tác đơn giản, bạn có thể điều khiển toàn bộ không gian để tạo nên môi trường nghỉ ngơi hoàn hảo.' }),
+      highlight: t('intro_smart_space_highlight', { defaultValue: 'LƯU TRÚ 24/7' }),
+      subTitle: t('intro_smart_space_subtitle', { defaultValue: 'PHÒNG NGỦ THÔNG MINH & TIỆN NGHI' }),
       icon: <Sparkles className="w-6 h-6" />,
       imagePosition: 'left',
       gradient: 'from-blue-500 to-purple-600'
     },
     {
       image: 'https://www.samdihotel.vn/uploads/image/images/16a3e309b5a14bff12b0.jpg',
-      title: 'THƯ GIÃN ĐẲNG CẤP TẠI SPA',
-      description: 'Thư giãn tuyệt đối với không gian spa yên bình, được thiết kế để mang lại sự thoải mái tối đa. Trải nghiệm liệu trình chăm sóc đặc biệt giúp cơ thể và tâm hồn được tái tạo năng lượng hoàn toàn.',
-      highlight: 'SPA 5 SAO',
-      subTitle: 'TRẢI NGHIỆM THƯ GIÃN ĐỈNH CAO',
+      title: t('intro_spa_title', { defaultValue: 'THƯ GIÃN ĐẲNG CẤP TẠI SPA' }),
+      description: t('intro_spa_desc', { defaultValue: 'Thư giãn tuyệt đối với không gian spa yên bình, được thiết kế để mang lại sự thoải mái tối đa. Trải nghiệm liệu trình chăm sóc đặc biệt giúp cơ thể và tâm hồn được tái tạo năng lượng hoàn toàn.' }),
+      highlight: t('intro_spa_highlight', { defaultValue: 'SPA 5 SAO' }),
+      subTitle: t('intro_spa_subtitle', { defaultValue: 'TRẢI NGHIỆM THƯ GIÃN ĐỈNH CAO' }),
       icon: <Heart className="w-6 h-6" />,
       imagePosition: 'right',
       gradient: 'from-emerald-500 to-teal-600'
     },
     {
       image: 'https://thietkethicong.org/images/Product/xay-dung-noi-that-khach-san-hote-chuan-sao-c-12.jpg',
-      title: 'ẨM THỰC TINH TẾ & ĐẲNG CẤP',
-      description: 'Nhà hàng mang đến trải nghiệm ẩm thực tinh tế với các món ăn được chế biến bởi đầu bếp hàng đầu. Tận hưởng không gian sang trọng cùng tầm nhìn tuyệt đẹp, mỗi món ăn là một tác phẩm nghệ thuật.',
-      highlight: 'MICHELIN GUIDE',
-      subTitle: 'TRẢI NGHIỆM ẨM THỰC ĐỈNH CAO',
+      title: t('intro_dining_title', { defaultValue: 'ẨM THỰC TINH TẾ & ĐẲNG CẤP' }),
+      description: t('intro_dining_desc', { defaultValue: 'Nhà hàng mang đến trải nghiệm ẩm thực tinh tế với các món ăn được chế biến bởi đầu bếp hàng đầu. Tận hưởng không gian sang trọng cùng tầm nhìn tuyệt đẹp, mỗi món ăn là một tác phẩm nghệ thuật.' }),
+      highlight: t('intro_dining_highlight', { defaultValue: 'MICHELIN GUIDE' }),
+      subTitle: t('intro_dining_subtitle', { defaultValue: 'TRẢI NGHIỆM ẨM THỰC ĐỈNH CAO' }),
       icon: <Star className="w-6 h-6" />,
       imagePosition: 'left',
       gradient: 'from-orange-500 to-red-600'
@@ -105,8 +107,6 @@ const Introduction = () => {
                   <h3 className={`text-xl lg:text-2xl font-semibold bg-gradient-to-r ${section.gradient} bg-clip-text text-transparent mb-6`}>
                     {section.subTitle}
                   </h3>
-                  
-                
                 </div>
 
                 {/* Decorative Elements */}
@@ -127,8 +127,6 @@ const Introduction = () => {
           </div>
         );
       })}
-      
-      
     </div>
   );
 };

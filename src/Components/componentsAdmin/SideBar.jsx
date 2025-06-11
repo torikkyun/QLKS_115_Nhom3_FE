@@ -69,23 +69,18 @@ const Sidebar = () => {
     },
     {
       key: '3',
-      icon: <ScheduleOutlined />,
-      label: 'Danh sách đặt phòng',
-      path: '/bookings',
+      icon: <AppstoreOutlined />,
+      label: 'Danh sách đặt trả phòng',
+      path: '/admin/room-bookings',
     },
     {
       key: '4',
-      icon: <UnorderedListOutlined />,
-      label: 'Quản lý Đơn Hàng',
-      path: '/bookings',
-    },
-    {
-      key: '5',
       icon: <ShoppingCartOutlined />,
       label: 'Quản lý hóa đơn',
       path: '/admin/bill',
     },
     
+
   ];
 
   return (

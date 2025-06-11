@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Form, Input, Select } from 'antd';
+import { Modal, Form, Input, Select, InputNumber } from 'antd';
 
 const { Option } = Select;
 
@@ -81,7 +81,14 @@ const RoomForm = ({ visible, onCancel, onSave, room }) => {
           </Select>
         </Form.Item>
         <Form.Item
-          name="tenTinhTrang"
+          name="soGiuong"
+          label="Số Giường"
+          rules={[{ required: true, message: 'Vui lòng nhập số giường' }]}
+        >
+          <InputNumber min={1} className="w-full" />
+        </Form.Item>
+        <Form.Item
+          name="tinhTrangPhong"
           label="Trạng Thái"
           rules={[{ required: true, message: 'Vui lòng chọn trạng thái' }]}
         >

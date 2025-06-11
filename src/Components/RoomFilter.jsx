@@ -39,11 +39,7 @@ const RoomFilter = ({ onFilter }) => {
         value={amenities}
         onChange={(e) => setAmenities(e.target.value)}
       >
-        <option value="">Tiện ích</option>
-        <option value="wifi">WiFi</option>
-        <option value="tv">TV</option>
-        <option value="ac">Điều hòa</option>
-        <option value="pool">Bể bơi</option>
+        
       </select>
 
       <button

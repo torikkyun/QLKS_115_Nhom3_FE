@@ -26,17 +26,19 @@ const RoomManagement = () => {
             if (!token) {
                 throw new Error('Token không tồn tại. Vui lòng đăng nhập lại.');
             }
-
             const response = await getRooms(pagination.page, pagination.pageSize);
-            console.log('API Response:', response);
-
-            if (!response || typeof response !== 'object') {
-                throw new Error('Phản hồi API không hợp lệ');
-            }
-
+            console.log('API Response Data:', response.data);
             const fetchedRooms = Array.isArray(response.data) ? response.data : response || [];
-            console.log('Fetched Rooms:', fetchedRooms);
-            setRooms(fetchedRooms);
+            // Normalize tenTinhTrang and maLoaiPhong
+            const normalizedRooms = fetchedRooms.map((room) => ({
+                ...room,
+                tenTinhTrang: room.tenTinhTrang === '0' || room.tenTinhTrang === 'Trống' ? 'Trống' : 'Đã sử dụng',
+                maLoaiPhong: room.maLoaiPhong === 1 || room.maLoaiPhong === '1' ? '1' :
+                    room.maLoaiPhong === 2 || room.maLoaiPhong === '2' ? '2' :
+                        room.maLoaiPhong === 3 || room.maLoaiPhong === '3' ? '3' : room.maLoaiPhong || '',
+            }));
+            console.log('Normalized Rooms:', normalizedRooms);
+            setRooms(normalizedRooms);
             setPagination({
                 page: response.page || 1,
                 pageSize: response.pageSize || 10,
@@ -51,7 +53,6 @@ const RoomManagement = () => {
             setLoading(false);
         }
     };
-
     useEffect(() => {
         fetchRooms();
     }, [pagination.page, pagination.pageSize]);
@@ -117,8 +118,21 @@ const RoomManagement = () => {
         const matchesSearch =
             (room.soPhong || '').toLowerCase().includes(searchText) ||
             (room.maPhong || '').toString().toLowerCase().includes(searchText);
-        const matchesStatus = filters.status === '' || (room.tenTinhTrang !== undefined && room.tenTinhTrang.toString() === filters.status);
-        const matchesType = filters.type === '' || (room.maLoaiPhong !== undefined && room.maLoaiPhong.toString() === filters.type);
+
+        // Map status filter to match API data
+        const statusMap = {
+            '0': 'Đã sử dụng',
+            '1': 'Trống',
+        };
+        const matchesStatus =
+            filters.status === '' ||
+            (room.tenTinhTrang !== undefined && room.tenTinhTrang === statusMap[filters.status]);
+
+        // Ensure maLoaiPhong is compared as a string
+        const matchesType =
+            filters.type === '' ||
+            (room.maLoaiPhong !== undefined && room.maLoaiPhong.toString() === filters.type);
+
         return matchesSearch && matchesStatus && matchesType;
     });
 
@@ -161,7 +175,7 @@ const RoomManagement = () => {
                     />
                     <DeleteConfirmModal
                         visible={isDeleteModalVisible}
-                        onConfirm={handleConfirmDelete} 
+                        onConfirm={handleConfirmDelete}
                         onCancel={() => setIsDeleteModalVisible(false)}
                     />
                     <ToastContainer />

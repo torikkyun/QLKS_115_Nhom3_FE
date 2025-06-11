@@ -65,8 +65,6 @@ const Rooms = () => {
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
       <Header className="transition-all duration-300 ease-in-out shadow-md" />
-
-      {/* Hero Section */}
       <div className="relative bg-gray-800 h-96 w-full overflow-hidden">
         <img
           src="https://digital.ihg.com/is/image/ihg/hotel-indigo-ho-chi-minh-city-10436107250-2x1"
@@ -91,19 +89,18 @@ const Rooms = () => {
       </div>
 
       <main className="flex-1">
-        {/* Breadcrumb và nút quay lại */}
-        <div className="bg-white shadow-sm border-b">
+
+        <div className="bg-gray-200 shadow-sm border-b">
           <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-4 ">
             <div className="flex items-center space-x-4">
               <Link
                 to="/"
-                className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+                className="flex items-center text-gray-600 hover:text-blue-700 transition-colors"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
                Trang chủ
               </Link>
               <span className="text-gray-400">/</span>
-              <span className="text-gray-600 font-medium">Danh sách phòng</span>
+              <span className="text-blue-600 font-medium">Danh sách phòng</span>
             </div>
           </div>
         </div>

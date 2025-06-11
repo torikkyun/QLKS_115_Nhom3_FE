@@ -15,8 +15,12 @@ import PromotionPage from "../Screens/Customers/PromotionPage";
 import AboutUsPage from "../Screens/Customers/AboutUsPage";
 import InvoicePage from "../Screens/Customers/InvoicePage";
 import RoomsPage from "../Screens/Customers/RoomsPage";
-
 import LookupInvoicePage from "../Screens/Customers/LookupInvoicePage";
+import ContactPage from "../Screens/Customers/ContactPage";
+import EmployeeCustomerList from "../Screens/Employee/EmployeeCustomerList";
+import EmployeeRoomList from "../Screens/Employee/EmployeeRoomList";
+import EmployeeBookingList from "../Screens/Employee/EmployeeBookingList";
+import AdminBookingList from "../Screens/Admin/AdminBookingList";
 
 export const router = createBrowserRouter([
     {
@@ -57,7 +61,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/admin/bill",
-        element: <BillManagement/>,
+        element: <BillManagement />,
     },
     {
         path: "/user/detailroom/:maPhong",
@@ -65,7 +69,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/user/CartPage",
-        element: <CartPage/>, 
+        element: <CartPage />,
     },
     {
         path: "/user/promotion/:maKhuyenMai",
@@ -86,8 +90,26 @@ export const router = createBrowserRouter([
     {
         path: "/user/lookupinvoice",
         element: <LookupInvoicePage />,
-    }
-
-
+    },
+    {
+        path: "/user/contact",
+        element: <ContactPage />,
+    },
+    {
+        path: "/employee/rooms",
+        element: <EmployeeRoomList />
+    },
+    {
+        path: "/employee/customers",
+        element: <EmployeeCustomerList />
+    },
+    {
+        path: "/admin/room-bookings",
+        element: <AdminBookingList />
+    },
+    {
+        path: "/employee/bookings",
+        element: <EmployeeBookingList />
+    },
 
 ]);

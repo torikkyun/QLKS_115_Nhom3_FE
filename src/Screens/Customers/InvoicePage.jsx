@@ -103,78 +103,78 @@ const InvoicePage = () => {
                 <div className="max-w-4xl mx-auto bg-white" style={{ width: '210mm', minHeight: '297mm', padding: '20mm' }}>
                     {/* Header */}
                     <div className="text-center border-b-2 border-black pb-4 mb-6">
-                        <h1 className="text-2xl font-bold mb-2">HÓA ĐƠN THANH TOÁN</h1>
-                        <p className="text-base">KHÁCH SẠN</p>
+                        <h1 className="text-2xl font-bold mb-2">{t('invoice_title', { defaultValue: 'HÓA ĐƠN THANH TOÁN' })}</h1>
+                        <p className="text-base">{t('hotel', { defaultValue: 'KHÁCH SẠN' })}</p>
                     </div>
 
                     <div className="grid grid-cols-3 gap-4 mb-6">
                         <div>
-                            <p className="font-semibold">Mã đặt phòng:</p>
+                            <p className="font-semibold">{t('booking_code', { defaultValue: 'Mã đặt phòng:' })}</p>
                             <p>#{datPhong?.maDatPhong || 'N/A'}</p>
                         </div>
                         <div>
-                            <p className="font-semibold">Ngày xuất:</p>
+                            <p className="font-semibold">{t('invoice_date', { defaultValue: 'Ngày xuất:' })}</p>
                             <p>{dayjs(ngayXuatHoaDon).format('DD/MM/YYYY HH:mm') || 'N/A'}</p>
                         </div>
                         <div>
-                            <p className="font-semibold">Trạng thái:</p>
+                            <p className="font-semibold">{t('status', { defaultValue: 'Trạng thái:' })}</p>
                             <p>{tinhTrangThanhToan?.tenTinhTrang || 'N/A'}</p>
                         </div>
                     </div>
 
                     <Divider />
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold mb-3">THÔNG TIN KHÁCH HÀNG</h2>
+                        <h2 className="text-lg font-bold mb-3">{t('customer_info', { defaultValue: 'THÔNG TIN KHÁCH HÀNG' })}</h2>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <p><span className="font-semibold">Họ và tên:</span> {`${datPhong?.khachHang?.ho || ''} ${datPhong?.khachHang?.ten || ''}`.trim() || 'N/A'}</p>
-                                <p><span className="font-semibold">Số điện thoại:</span> {datPhong?.khachHang?.sdt || 'N/A'}</p>
+                                <p><span className="font-semibold">{t('full_name', { defaultValue: 'Họ và tên:' })}</span> {`${datPhong?.khachHang?.ho || ''} ${datPhong?.khachHang?.ten || ''}`.trim() || 'N/A'}</p>
+                                <p><span className="font-semibold">{t('phone', { defaultValue: 'Số điện thoại:' })}</span> {datPhong?.khachHang?.sdt || 'N/A'}</p>
                             </div>
                             <div>
-                                <p><span className="font-semibold">Email:</span> {datPhong?.khachHang?.email || 'N/A'}</p>
-                                <p><span className="font-semibold">CMND/CCCD:</span> {datPhong?.khachHang?.cccd || 'N/A'}</p>
+                                <p><span className="font-semibold">{t('email', { defaultValue: 'Email:' })}</span> {datPhong?.khachHang?.email || 'N/A'}</p>
+                                <p><span className="font-semibold">{t('id_number', { defaultValue: 'CMND/CCCD:' })}</span> {datPhong?.khachHang?.cccd || 'N/A'}</p>
                             </div>
                         </div>
                     </div>
 
                     <Divider />
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold mb-3">CHI TIẾT ĐẶT PHÒNG</h2>
+                        <h2 className="text-lg font-bold mb-3">{t('booking_details', { defaultValue: 'CHI TIẾT ĐẶT PHÒNG' })}</h2>
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <p><span className="font-semibold">Số phòng đặt:</span> {datPhong?.soPhongDat || 'N/A'}</p>
+                                <p><span className="font-semibold">{t('room_count', { defaultValue: 'Số phòng đặt:' })}</span> {datPhong?.soPhongDat || 'N/A'}</p>
                             </div>
                             <div>
-                                <p><span className="font-semibold">Ghi chú:</span> {datPhong?.ghiChu || 'Không có'}</p>
+                                <p><span className="font-semibold">{t('notes', { defaultValue: 'Ghi chú:' })}</span> {datPhong?.ghiChu || t('no_notes', { defaultValue: 'Không có' })}</p>
                             </div>
                         </div>
                     </div>
 
                     <Divider />
                     <div className="mb-6">
-                        <h2 className="text-lg font-bold mb-3">CHI TIẾT THANH TOÁN</h2>
+                        <h2 className="text-lg font-bold mb-3">{t('payment_details', { defaultValue: 'CHI TIẾT THANH TOÁN' })}</h2>
                         <table className="w-full border-collapse border border-gray-300">
                             <thead>
                                 <tr className="bg-gray-100">
-                                    <th className="border border-gray-300 p-2 text-left">Mục</th>
-                                    <th className="border border-gray-300 p-2 text-right">Số tiền</th>
+                                    <th className="border border-gray-300 p-2 text-left">{t('item', { defaultValue: 'Mục' })}</th>
+                                    <th className="border border-gray-300 p-2 text-right">{t('amount', { defaultValue: 'Số tiền' })}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td className="border border-gray-300 p-2">Tổng tiền phòng</td>
+                                    <td className="border border-gray-300 p-2">{t('total_room_amount', { defaultValue: 'Tổng tiền phòng' })}</td>
                                     <td className="border border-gray-300 p-2 text-right">
                                         {tongTienPhong?.toLocaleString('vi-VN') || '0'} VND
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td className="border border-gray-300 p-2">Tổng tiền dịch vụ</td>
+                                    <td className="border border-gray-300 p-2">{t('total_service_amount', { defaultValue: 'Tổng tiền dịch vụ' })}</td>
                                     <td className="border border-gray-300 p-2 text-right">
                                         {tongTienDichVu?.toLocaleString('vi-VN') || '0'} VND
                                     </td>
                                 </tr>
                                 <tr className="bg-gray-100 font-bold">
-                                    <td className="border border-gray-300 p-2">TỔNG CỘNG</td>
+                                    <td className="border border-gray-300 p-2">{t('grand_total', { defaultValue: 'TỔNG CỘNG' })}</td>
                                     <td className="border border-gray-300 p-2 text-right">
                                         {tongTien?.toLocaleString('vi-VN') || '0'} VND
                                     </td>
@@ -186,15 +186,15 @@ const InvoicePage = () => {
                     {nhanVien && (
                         <div className="mb-6">
                             <p className="text-sm">
-                                <span className="font-semibold">Nhân viên xử lý:</span> {nhanVien.hoTen || nhanVien.ten || 'N/A'}
+                                <span className="font-semibold">{t('staff', { defaultValue: 'Nhân viên xử lý:' })}</span> {nhanVien.hoTen || nhanVien.ten || 'N/A'}
                             </p>
                         </div>
                     )}
 
                     <div className="text-center mt-8 pt-4 border-t border-gray-300">
-                        <p className="text-sm">Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!</p>
+                        <p className="text-sm">{t('thank_you', { defaultValue: 'Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!' })}</p>
                         <p className="text-xs text-gray-600 mt-2">
-                            Hóa đơn được in vào: {dayjs().format('DD/MM/YYYY HH:mm:ss')}
+                            {t('invoice_printed_at', { defaultValue: 'Hóa đơn được in vào:' })} {dayjs().format('DD/MM/YYYY HH:mm:ss')}
                         </p>
                     </div>
                 </div>

@@ -34,7 +34,7 @@ const InvoiceSearchPage = () => {
       
       {/* Hero Section */}
       <div className="relative bg-gradient-to-br from-blue-600 via-blue-600 to-indigo-700 overflow-hidden mt-20">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='3.5' cy='3.5' r='3.5'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] motion-reduce:animate-none animate-pulse"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'30\' height=\'30\' viewBox=\'0 0 30 30\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.1\'%3E%3Ccircle cx=\'3.5\' cy=\'3.5\' r=\'3.5\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\')] motion-reduce:animate-none animate-pulse"></div>
         
         <div className="relative z-10 py-12 px-4 sm:px-6 lg:px-8 text-center text-white">
           <div className="max-w-4xl mx-auto">

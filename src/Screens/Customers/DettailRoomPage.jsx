@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Spin, message } from 'antd';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getRoom, bookRoom } from '../../apis/apiroom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { getRoom } from '../../apis/apiroom';
 import { getServices } from '../../apis/apiservice';
 import { fetchPromotions } from '../../apis/apipromotion';
 import Header from '../../Components/componentUser/Header';
-import { addBooking } from '../../redux/CartSlice';
 import BookingModal from '../../Components/componentUser/BookingModal';
 import RoomImageGallery from '../../Components/componentUser/RoomImage';
 import RoomInfo from '../../Components/componentUser/RoomInfor';
 import BookingDetail from '../../Components/componentUser/BookingDetail';
 import { useRoomBooking } from '../../hooks/useRoomBooking';
+import { useTranslation } from 'react-i18next';
 
 const RoomDetail = () => {
+  const { t } = useTranslation();
   const { maPhong } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -63,13 +64,13 @@ const RoomDetail = () => {
       const roomResponse = await getRoom(maPhong);
       let roomData = roomResponse && Object.keys(roomResponse).length > 0 ? roomResponse : {
         maPhong: maPhong,
-        soPhong: `Phòng ${maPhong}`,
+        soPhong: `${t('room', { defaultValue: 'Phòng' })} ${maPhong}`,
         giaPhong: 1500000,
         soGiuong: 1,
-        tenTinhTrang: "Còn phòng",
-        ghiChu: "Phòng sang trọng",
+        tenTinhTrang: t('available', { defaultValue: 'Còn phòng' }),
+        ghiChu: t('luxury_room', { defaultValue: 'Phòng sang trọng' }),
       };
-      roomData.moTa = roomData.moTa || "🌟 Khám phá trải nghiệm nghỉ dưỡng lý tưởng...";
+      roomData.moTa = roomData.moTa || t('room_description_default', { defaultValue: '🌟 Khám phá trải nghiệm nghỉ dưỡng lý tưởng...' });
       roomData.giaPhong = roomData.giaPhong || 1500000;
       setRoom(roomData);
 
@@ -84,8 +85,8 @@ const RoomDetail = () => {
       // Fetch services
       const servicesResponse = await getServices(1, 100);
       const servicesData = servicesResponse.data || [
-        { id: 1, tenLoai: "Dịch vụ phòng", giaDichVu: 100000 },
-        { id: 2, tenLoai: "Dịch vụ ăn uống", giaDichVu: 200000 },
+        { id: 1, tenLoai: t('room_service', { defaultValue: 'Dịch vụ phòng' }), giaDichVu: 100000 },
+        { id: 2, tenLoai: t('dining_service', { defaultValue: 'Dịch vụ ăn uống' }), giaDichVu: 200000 },
       ];
       const processedServices = servicesData.map(service => ({
         maDichVu: service.maDichVu || service.id,
@@ -96,10 +97,10 @@ const RoomDetail = () => {
 
       // Fetch promotions
       const promotionsResponse = await fetchPromotions(1, 100);
-      setPromotions(promotionsResponse.data || []); // Chỉ lấy data (mảng khuyến mãi)
+      setPromotions(promotionsResponse.data || []);
     } catch (error) {
       console.error('Lỗi khi lấy dữ liệu:', error.message);
-      message.error('Lỗi khi tải dữ liệu: ' + error.message);
+      message.error(t('fetch_error', { defaultValue: 'Lỗi khi tải dữ liệu: ' }) + error.message);
     } finally {
       setLoading(false);
     }
@@ -114,18 +115,33 @@ const RoomDetail = () => {
   }
 
   if (!room || !hotel) {
-    return <div className="text-center text-gray-500">Phòng không tồn tại</div>;
+    return <div className="text-center text-gray-500">{t('room_not_found', { defaultValue: 'Phòng không tồn tại' })}</div>;
   }
 
   return (
     <div className="bg-gray-50 min-h-screen pb-12">
       <Header />
+      <nav className="max-w-full mx-auto px-4 py-2 bg-gray-200 h-15 flex items-center mt-21 border-b">
+        <ol className="flex items-center space-x-2 text-gray-600 font medium">
+          <li>
+            <Link to="/" className="hover:text-blue-600">{t('home', { defaultValue: 'Trang chủ' })}</Link>
+          </li>
+          <li className="flex items-center">
+            <span className="mx-2">/</span>
+            <li>
+              <Link to="/user/rooms" className="hover:text-blue-600">{t('rooms', { defaultValue: 'Phòng' })}</Link>
+            </li>
+            <span className="mx-2">/</span>
+            <span className="text-blue-600 font-medium">{t('room_detail', { defaultValue: 'Chi Tiết Phòng' })}</span>
+          </li>
+        </ol>
+      </nav>
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 pt-14">
         {/* Header Section - Responsive */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 pt-8 sm:pt-12 space-y-3 sm:space-y-0">
           <div className="flex-1">
             <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
-              Phòng {room.soPhong}
+              {t('room', { defaultValue: 'Phòng' })} {room.soPhong}
             </h1>
           </div>
           <div className="flex items-center justify-start sm:justify-end">
@@ -134,7 +150,7 @@ const RoomDetail = () => {
                 {hotel.danhGia}
               </div>
               <div className="bg-blue-100 text-blue-800 rounded-r px-2 sm:px-3 py-1 font-medium text-sm sm:text-base">
-                Tuyệt vời
+                {t('excellent', { defaultValue: 'Tuyệt vời' })}
               </div>
             </div>
           </div>

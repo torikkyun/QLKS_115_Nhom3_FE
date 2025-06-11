@@ -10,7 +10,7 @@ const RoomList = ({ rooms, onEdit, onDelete }) => {
     { title: 'Số Giường', dataIndex: 'soGiuong', key: 'soGiuong' },
     { title: 'Giá Phòng', dataIndex: 'giaPhong', key: 'giaPhong' },
     {
-      title: 'Tình Trạng',
+      title: 'Trạng Thái',
       dataIndex: 'tenTinhTrang',
       key: 'tenTinhTrang',
       render: (status) => (
@@ -19,6 +19,7 @@ const RoomList = ({ rooms, onEdit, onDelete }) => {
         </span>
       ),
     },
+    { title: 'Giá Phòng', dataIndex: 'giaPhong', key: 'giaPhong' },
     {
       title: 'Hành Động',
       key: 'action',

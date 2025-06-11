@@ -117,7 +117,7 @@ const CartPage = () => {
               type="primary"
               size="large"
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 border-0 rounded-full px-8 py-3 h-auto text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
-              onClick={() => window.location.href = '/user/home'}
+              onClick={() => window.location.href = '/user/rooms'}
             >
               Khám Phá Phòng Ngay
             </Button>

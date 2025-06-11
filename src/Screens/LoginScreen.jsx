@@ -80,7 +80,7 @@ const LoginScreen = () => {
         if (roleName === "Quản lý") {
           navigate("/admin/dashboard");
         } else if (roleName === "Lễ tân" || roleName === "Phục vụ") {
-          navigate("/staff/home");
+          navigate('/employee/rooms'); // Chuyển hướng cho Nhân viên
         }
       } catch (error) {
         setErrors({ api: error.message || "Email hoặc mật khẩu không đúng" });

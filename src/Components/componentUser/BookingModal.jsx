@@ -1,6 +1,6 @@
 // BookingModal.jsx
 import React from 'react';
-import { Modal, message } from 'antd';
+import { Modal } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import BookingDetails from '../../Components/componentUser/BookingModalInvoice';

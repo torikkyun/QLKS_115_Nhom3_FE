@@ -112,6 +112,7 @@ const ProfilePutModal = ({ isOpen, onClose, onSave }) => {
               onChange={handleChange}
               placeholder="Nhập email"
               className="w-full p-2 border rounded"
+              readOnly
             />
           </div>
 

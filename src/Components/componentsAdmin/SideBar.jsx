@@ -69,9 +69,9 @@ const Sidebar = () => {
     },
     {
       key: '3',
-      icon: <ScheduleOutlined />,
-      label: 'Danh sách đặt phòng',
-      path: '/bookings',
+      icon: <AppstoreOutlined />,
+      label: 'Danh sách đặt trả phòng',
+      path: '/admin/room-bookings',
     },
     {
       key: '4',
@@ -80,6 +80,7 @@ const Sidebar = () => {
       path: '/admin/bill',
     },
     
+
   ];
 
   return (

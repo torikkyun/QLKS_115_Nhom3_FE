@@ -2,13 +2,12 @@ import React from 'react';
 import { Table, Button, Popconfirm, Space } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
-const RoomList = ({ rooms, onEdit, onDelete }) => {
+const EmployeeRoomTable = ({ rooms }) => {
   const columns = [
     { title: 'Mã Phòng', dataIndex: 'maPhong', key: 'maPhong' },
     { title: 'Số Phòng', dataIndex: 'soPhong', key: 'soPhong' },
     { title: 'Loại Phòng', dataIndex: 'ghiChu', key: 'ghiChu' },
     { title: 'Số Giường', dataIndex: 'soGiuong', key: 'soGiuong' },
-    { title: 'Giá Phòng', dataIndex: 'giaPhong', key: 'giaPhong' },
     {
       title: 'Trạng Thái',
       dataIndex: 'tenTinhTrang',
@@ -20,32 +19,7 @@ const RoomList = ({ rooms, onEdit, onDelete }) => {
       ),
     },
     { title: 'Giá Phòng', dataIndex: 'giaPhong', key: 'giaPhong' },
-    {
-      title: 'Hành Động',
-      key: 'action',
-      render: (_, record) => (
-        <Space>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => onEdit(record)}
-            className="bg-blue-600 text-white hover:bg-blue-700"
-          />
-          <Popconfirm
-            title="Bạn có chắc muốn xóa phòng này?"
-            onConfirm={() => onDelete(record.maPhong)}
-            okText="Xóa"
-            cancelText="Hủy"
-          >
-            <Button
-              icon={<DeleteOutlined />}
-              className="bg-red-600 text-white hover:bg-red-700"
-            />
-          </Popconfirm>
-        </Space>
-      ),
-    },
   ];
-
   return (
     <Table
       columns={columns}
@@ -57,4 +31,4 @@ const RoomList = ({ rooms, onEdit, onDelete }) => {
   );
 };
 
-export default RoomList;
+export default EmployeeRoomTable;
